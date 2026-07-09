@@ -45,7 +45,7 @@ export function DashboardPage() {
 
       {statsError ? (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
-          <p className="text-red-500">{statsError}</p>
+          <p className="text-red-500">{statsError?.message || 'Error loading stats'}</p>
           <button onClick={() => window.location.reload()} className="inline-flex items-center gap-2 text-sm text-worldcup-500 hover:text-worldcup-600 transition-colors">
             <RefreshCw className="w-4 h-4" /> Reintentar
           </button>
