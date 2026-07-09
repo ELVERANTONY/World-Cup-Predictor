@@ -30,7 +30,19 @@ export interface MatchStats {
 
 export interface GroupStats {
   group: string;
-  teams: { name: string; points: number; played: number }[];
+  teams: {
+    id: string;
+    name: string;
+    shortName: string;
+    flagUrl: string;
+    points: number;
+    played: number;
+    won: number;
+    drawn: number;
+    lost: number;
+    goalsFor: number;
+    goalsAgainst: number;
+  }[];
 }
 
 export async function getUserStats(userId?: string): Promise<UserStats> {
