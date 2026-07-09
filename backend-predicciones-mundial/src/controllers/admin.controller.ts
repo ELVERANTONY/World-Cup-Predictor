@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../config/prisma.js';
+import { aiService } from '../services/ai.service.js';
 
 export class AdminController {
   async getDashboard(_req: Request, res: Response, next: NextFunction) {
@@ -73,6 +74,15 @@ export class AdminController {
           ...result,
         },
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async generateInsights(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const count = await aiService.generateInsightsForUpcoming();
+      res.json({ status: 'success', data: { message: `Generated ${count} insights for upcoming matches`, count } });
     } catch (error) {
       next(error);
     }

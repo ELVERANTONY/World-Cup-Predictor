@@ -55,12 +55,17 @@ export class MatchController {
         res.status(404).json({ status: 'error', message: 'Match not found' });
         return;
       }
-      const insights = await aiService.getMatchInsights(
-        match.homeTeam?.name || 'TBD',
-        match.awayTeam?.name || 'TBD',
-        match.stage
-      );
+      const insights = await aiService.getMatchInsights(req.params.id as string);
       res.json({ status: 'success', data: { insights } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async generateAllInsights(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const count = await aiService.generateInsightsForUpcoming();
+      res.json({ status: 'success', data: { message: `Generated ${count} insights`, count } });
     } catch (error) {
       next(error);
     }

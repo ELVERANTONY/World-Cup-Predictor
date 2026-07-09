@@ -117,6 +117,7 @@ model Match {
   referee    String?
   extraTime  Boolean     @default(false)
   penalties  Boolean     @default(false)
+  aiInsight  String?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   predictions Prediction[]
