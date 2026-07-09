@@ -31,32 +31,32 @@ export function EditProfileModal({ open, onClose, initialData, onSave }: EditPro
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim()) { addToast('error', 'Name is required'); return }
+    if (!name.trim()) { addToast('error', 'El nombre es requerido'); return }
     setSaving(true)
     try {
       await onSave({ name: name.trim(), avatarUrl: avatarUrl || undefined, favoriteTeamId: favoriteTeamId || undefined })
-      addToast('success', 'Profile updated!')
+      addToast('success', '¡Perfil actualizado!')
       onClose()
     } catch {
-      addToast('error', 'Failed to update profile')
+      addToast('error', 'Error al actualizar perfil')
     } finally {
       setSaving(false)
     }
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Edit Profile" size="md">
+    <Modal open={open} onClose={onClose} title="Editar Perfil" size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input label="Full Name" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" />
-        <Input label="Avatar URL" value={avatarUrl} onChange={e => setAvatarUrl(e.target.value)} placeholder="https://example.com/avatar.jpg" />
+        <Input label="Nombre Completo" value={name} onChange={e => setName(e.target.value)} placeholder="Tu nombre" />
+        <Input label="URL del Avatar" value={avatarUrl} onChange={e => setAvatarUrl(e.target.value)} placeholder="https://ejemplo.com/avatar.jpg" />
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Favorite Team</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Equipo Favorito</label>
           <select value={favoriteTeamId} onChange={e => setFavoriteTeamId(e.target.value)} className="w-full rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-worldcup-500">
-            <option value="">No favorite team</option>
+            <option value="">Sin equipo favorito</option>
             {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
         </div>
-        <Button type="submit" loading={saving} className="w-full" iconLeft={<Save className="w-4 h-4" />}>Save Changes</Button>
+        <Button type="submit" loading={saving} className="w-full" iconLeft={<Save className="w-4 h-4" />}>Guardar Cambios</Button>
       </form>
     </Modal>
   )

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { ArrowLeft, Calendar, MapPin, Users, Sparkles, ShieldAlert, CheckCircle2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, Users, Sparkles, ShieldAlert, CheckCircle2, AlertCircle, Send, Loader2, Lock } from 'lucide-react'
 import { useMatch, useMatchInsights, useMatchPredictions, useCreatePrediction } from '@/hooks/useQueries'
+import { askMatchInsight } from '@/services/match.service'
 import { PredictionCard } from '@/features/predictions/PredictionCard'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -31,6 +32,13 @@ export function MatchDetailPage() {
   const [homeScore, setHomeScore] = useState('')
   const [awayScore, setAwayScore] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  
+  const [chatQuestion, setChatQuestion] = useState('')
+  const [chatAnswer, setChatAnswer] = useState('')
+  const [isAsking, setIsAsking] = useState(false)
+  const [questionsAsked, setQuestionsAsked] = useState(() => {
+    return parseInt(localStorage.getItem(`gemini_questions_${id}`) || '0', 10)
+  })
 
   async function handlePrediction(e: React.FormEvent) {
     e.preventDefault()
@@ -47,6 +55,24 @@ export function MatchDetailPage() {
       addToast('error', err.response?.data?.message || 'Error al guardar predicción')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  async function handleAskInsight(e: React.FormEvent) {
+    e.preventDefault()
+    if (!chatQuestion.trim()) return
+    setIsAsking(true)
+    try {
+      const answer = await askMatchInsight(id!, chatQuestion)
+      setChatAnswer(answer)
+      setChatQuestion('') // clear input after asking
+      const newCount = questionsAsked + 1
+      setQuestionsAsked(newCount)
+      localStorage.setItem(`gemini_questions_${id!}`, newCount.toString())
+    } catch (err: any) {
+      addToast('error', err.message || 'Error al conectar con IA')
+    } finally {
+      setIsAsking(false)
     }
   }
 
@@ -138,6 +164,41 @@ export function MatchDetailPage() {
                   <p className="text-sm text-indigo-800/80 dark:text-indigo-200/70 leading-relaxed">{insights}</p>
                 </div>
               </div>
+              
+              {isUpcoming && (
+                <div className="mt-4 pt-4 border-t border-indigo-100 dark:border-indigo-900/50">
+                  {questionsAsked >= 2 ? (
+                    <div className="flex flex-col items-center justify-center p-4 bg-indigo-50/50 dark:bg-indigo-950/20 rounded-xl border border-indigo-100 dark:border-indigo-900/50 text-center gap-2">
+                      <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-full text-indigo-500">
+                        <Lock className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-300">Límite alcanzado</p>
+                        <p className="text-xs text-indigo-700/70 dark:text-indigo-300/70">Solo puedes hacer 2 preguntas por partido.</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleAskInsight} className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={chatQuestion}
+                        onChange={e => setChatQuestion(e.target.value)}
+                        placeholder={`Pregúntale a Gemini sobre este partido... (${2 - questionsAsked} restantes)`}
+                        className="flex-1 bg-white/50 dark:bg-zinc-900/50 border border-indigo-200 dark:border-indigo-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        disabled={isAsking}
+                      />
+                      <Button type="submit" disabled={isAsking || !chatQuestion.trim()} size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                        {isAsking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      </Button>
+                    </form>
+                  )}
+                  {chatAnswer && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-3 p-3 bg-white/60 dark:bg-zinc-900/60 rounded-lg text-sm text-indigo-900 dark:text-indigo-200">
+                      <strong className="text-indigo-600 dark:text-indigo-400">Respuesta:</strong> {chatAnswer}
+                    </motion.div>
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
 

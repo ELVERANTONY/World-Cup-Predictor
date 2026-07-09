@@ -62,6 +62,20 @@ export class MatchController {
     }
   }
 
+  async askInsight(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { question } = req.body;
+      if (!question) {
+        res.status(400).json({ status: 'error', message: 'Question is required' });
+        return;
+      }
+      const answer = await aiService.askMatchQuestion(req.params.id as string, question);
+      res.json({ status: 'success', data: { answer } });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async generateAllInsights(_req: Request, res: Response, next: NextFunction) {
     try {
       const count = await aiService.generateInsightsForUpcoming();

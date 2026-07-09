@@ -22,8 +22,8 @@ export function RoomsPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-red-500">Failed to load rooms</p>
-        <Button variant="outline" onClick={() => window.location.reload()} iconLeft={<RefreshCw className="w-4 h-4" />}>Retry</Button>
+        <p className="text-red-500">Error al cargar las salas</p>
+        <Button variant="outline" onClick={() => window.location.reload()} iconLeft={<RefreshCw className="w-4 h-4" />}>Reintentar</Button>
       </div>
     )
   }
@@ -32,12 +32,12 @@ export function RoomsPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Rooms</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Join prediction rooms and compete with others</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Salas</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Únete a salas de predicción y compite con otros</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowJoin(true)} iconLeft={<LogIn className="w-4 h-4" />}>Join</Button>
-          <Button onClick={() => setShowCreate(true)} iconLeft={<Plus className="w-4 h-4" />}>Create Room</Button>
+          <Button variant="outline" onClick={() => setShowJoin(true)} iconLeft={<LogIn className="w-4 h-4" />}>Unirse</Button>
+          <Button onClick={() => setShowCreate(true)} iconLeft={<Plus className="w-4 h-4" />}>Crear Sala</Button>
         </div>
       </motion.div>
 
@@ -59,11 +59,11 @@ export function RoomsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Public Rooms</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Salas Públicas</h2>
             {publicRooms.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <Users className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" />
-                <p className="text-gray-500 dark:text-gray-400">No public rooms available</p>
+                <p className="text-gray-500 dark:text-gray-400">No hay salas públicas disponibles</p>
               </div>
             ) : (
               <motion.div className="grid gap-3" variants={staggerContainer} initial="hidden" animate="visible">
@@ -89,16 +89,16 @@ function RoomCard({ room, onClick }: { room: Room; onClick: () => void }) {
             <h3 className="font-semibold text-gray-900 dark:text-white truncate">{room.name}</h3>
             <Badge variant={room.isPublic ? 'info' : 'default'}>
               {room.isPublic ? <Globe className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
-              {room.isPublic ? 'Public' : 'Private'}
+              {room.isPublic ? 'Pública' : 'Privada'}
             </Badge>
           </div>
           {room.description && <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-1">{room.description}</p>}
         </div>
       </div>
       <div className="flex items-center gap-4 text-xs text-gray-400">
-        <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{room._count?.members || 0}/{room.maxMembers} members</span>
+        <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" />{room._count?.members || 0}/{room.maxMembers} miembros</span>
         <span className="text-gray-300">•</span>
-        <span>Code: {room.code}</span>
+        <span>Código: {room.code}</span>
       </div>
     </motion.div>
   )

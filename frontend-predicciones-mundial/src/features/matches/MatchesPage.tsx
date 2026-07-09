@@ -8,14 +8,23 @@ import { Button } from '@/components/ui/button'
 import { staggerContainer, staggerItem } from '@/utils/animation'
 import { cn } from '@/lib/utils'
 
-const STAGES = ['Todas las Fases', 'Fase de grupos', 'Octavos de final', 'Cuartos de final', 'Semifinal', 'Final']
+const STAGES = [
+  { value: 'all', label: 'Todas las Fases' },
+  { value: 'Group A', label: 'Fase de Grupos' },
+  { value: 'Round of 32', label: 'Ronda de 32' },
+  { value: 'Round of 16', label: 'Octavos de Final' },
+  { value: 'Quarter-final', label: 'Cuartos de Final' },
+  { value: 'Semi-final', label: 'Semifinal' },
+  { value: '3rd place play-off', label: 'Tercer Puesto' },
+  { value: 'Final', label: 'Final' },
+]
 const STATUSES = ['Todos', 'SCHEDULED', 'LIVE', 'FINISHED']
 
 export function MatchesPage() {
   const { data: matches = [], isLoading: matchesLoading, error: matchesError } = useMatches()
   const { data: teams = [], isLoading: teamsLoading } = useTeams()
-  const [stageFilter, setStageFilter] = useState('Todas las Fases')
-  const [teamFilter, setTeamFilter] = useState('All Teams')
+  const [stageFilter, setStageFilter] = useState('all')
+  const [teamFilter, setTeamFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('Todos')
   const [currentPage, setCurrentPage] = useState(1)
   const MATCHES_PER_PAGE = 12
@@ -23,8 +32,15 @@ export function MatchesPage() {
   const loading = matchesLoading || teamsLoading
 
   const filtered = matches.filter(m => {
-    if (stageFilter !== 'Todas las Fases' && m.stage !== stageFilter) return false
-    if (teamFilter !== 'All Teams' && m.homeTeamId !== teamFilter && m.awayTeamId !== teamFilter) return false
+    if (stageFilter !== 'all') {
+      // Group stages all share a similar pattern: match stages starting with Group
+      if (stageFilter === 'Group A') {
+        if (!m.stage?.startsWith('Group')) return false
+      } else {
+        if (m.stage !== stageFilter) return false
+      }
+    }
+    if (teamFilter !== 'all' && m.homeTeamId !== teamFilter && m.awayTeamId !== teamFilter) return false
     if (statusFilter !== 'Todos' && m.status !== statusFilter) return false
     return true
   }).sort((a, b) => {
@@ -48,8 +64,8 @@ export function MatchesPage() {
   if (matchesError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-red-500">Failed to load matches</p>
-        <Button variant="outline" onClick={() => window.location.reload()} iconLeft={<RefreshCw className="w-4 h-4" />}>Retry</Button>
+        <p className="text-red-500">Error al cargar los partidos</p>
+        <Button variant="outline" onClick={() => window.location.reload()} iconLeft={<RefreshCw className="w-4 h-4" />}>Reintentar</Button>
       </div>
     )
   }
@@ -64,11 +80,11 @@ export function MatchesPage() {
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white dark:bg-surface-dark p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
         <div className="flex flex-wrap gap-3">
           <select value={stageFilter} onChange={e => setStageFilter(e.target.value)} className="px-4 py-2.5 rounded-xl text-sm font-medium border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-worldcup-500 appearance-none min-w-[140px]">
-            {STAGES.map(s => <option key={s} value={s}>{s}</option>)}
+            {STAGES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
 
           <select value={teamFilter} onChange={e => setTeamFilter(e.target.value)} className="px-4 py-2.5 rounded-xl text-sm font-medium border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-worldcup-500 appearance-none min-w-[140px]">
-            <option value="All Teams">Todos los Equipos</option>
+            <option value="all">Todos los Equipos</option>
             {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
         </div>

@@ -78,12 +78,12 @@ export function NotificationsPanel({ open, onClose, unreadCount, onCountChange }
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-zinc-700">
               <div className="flex items-center gap-2">
                 <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Notifications</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Notificaciones</h2>
                 {unreadCount > 0 && <span className="px-2 py-0.5 text-xs font-medium bg-worldcup-500 text-white rounded-full">{unreadCount}</span>}
               </div>
               <div className="flex items-center gap-1">
                 {unreadCount > 0 && (
-                  <button onClick={handleMarkAllRead} className="p-2 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors" title="Mark all as read">
+                  <button onClick={handleMarkAllRead} className="p-2 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors" title="Marcar todas como leídas">
                     <CheckCheck className="w-4 h-4" />
                   </button>
                 )}
@@ -99,7 +99,7 @@ export function NotificationsPanel({ open, onClose, unreadCount, onCountChange }
               ) : notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center px-4">
                   <Bell className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" />
-                  <p className="text-sm text-gray-500 dark:text-gray-400">No notifications yet</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Aún no tienes notificaciones</p>
                 </div>
               ) : (
                 <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="p-2">

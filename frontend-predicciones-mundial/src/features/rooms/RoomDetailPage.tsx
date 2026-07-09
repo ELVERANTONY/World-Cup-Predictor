@@ -30,10 +30,10 @@ export function RoomDetailPage() {
     try {
       await navigator.clipboard.writeText(inviteLink)
       setCopied(true)
-      addToast('success', 'Invite link copied!')
+      addToast('success', '¡Link de invitación copiado!')
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      addToast('error', 'Failed to copy')
+      addToast('error', 'Error al copiar')
     }
   }
 
@@ -41,10 +41,10 @@ export function RoomDetailPage() {
     if (!id) return
     try {
       await leaveRoomMutation.mutateAsync(id)
-      addToast('success', 'Left room')
+      addToast('success', 'Saliste de la sala')
       navigate('/rooms')
     } catch {
-      addToast('error', 'Failed to leave room')
+      addToast('error', 'Error al salir de la sala')
     }
   }
 
@@ -52,9 +52,9 @@ export function RoomDetailPage() {
     if (!id) return
     try {
       await kickMemberMutation.mutateAsync({ roomId: id, userId })
-      addToast('success', 'Member kicked')
+      addToast('success', 'Miembro expulsado')
     } catch {
-      addToast('error', 'Failed to kick member')
+      addToast('error', 'Error al expulsar miembro')
     }
   }
 
@@ -65,8 +65,8 @@ export function RoomDetailPage() {
   if (roomError || !room) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <p className="text-red-500">Failed to load room</p>
-        <Button variant="outline" onClick={() => navigate('/rooms')} iconLeft={<ArrowLeft className="w-4 h-4" />}>Back to rooms</Button>
+        <p className="text-red-500">Error al cargar la sala</p>
+        <Button variant="outline" onClick={() => navigate('/rooms')} iconLeft={<ArrowLeft className="w-4 h-4" />}>Volver a Salas</Button>
       </div>
     )
   }
@@ -74,7 +74,7 @@ export function RoomDetailPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <button onClick={() => navigate('/rooms')} className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Back to rooms
+        <ArrowLeft className="w-4 h-4" /> Volver a Salas
       </button>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 p-6">
@@ -82,28 +82,28 @@ export function RoomDetailPage() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">{room.name}</h1>
-              <Badge variant={room.isPublic ? 'info' : 'default'}>{room.isPublic ? 'Public' : 'Private'}</Badge>
+              <Badge variant={room.isPublic ? 'info' : 'default'}>{room.isPublic ? 'Pública' : 'Privada'}</Badge>
             </div>
             {room.description && <p className="text-sm text-gray-500 dark:text-gray-400">{room.description}</p>}
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
-          <span className="flex items-center gap-1"><Users className="w-4 h-4" />{room._count?.members || 0}/{room.maxMembers} members</span>
+          <span className="flex items-center gap-1"><Users className="w-4 h-4" />{room._count?.members || 0}/{room.maxMembers} miembros</span>
           <span className="text-gray-300">•</span>
-          <span>Code: {room.code}</span>
+          <span>Código: {room.code}</span>
         </div>
 
         <div className="flex flex-wrap gap-2">
           <Button size="sm" variant="outline" onClick={handleCopyLink} iconLeft={copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}>
-            {copied ? 'Copied!' : 'Copy Invite Link'}
+            {copied ? '¡Copiado!' : 'Copiar Link de Invitación'}
           </Button>
-          <Button size="sm" variant="danger" onClick={handleLeave} iconLeft={<LogOut className="w-4 h-4" />}>Leave Room</Button>
+          <Button size="sm" variant="danger" onClick={handleLeave} iconLeft={<LogOut className="w-4 h-4" />}>Salir de la Sala</Button>
         </div>
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-2xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Rankings</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Clasificación</h2>
         <div className="space-y-2">
           {sortedMembers.map((member, i) => (
             <motion.div
@@ -131,7 +131,7 @@ export function RoomDetailPage() {
                 ) : member.user?.name?.charAt(0) || '?'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{member.user?.name || 'Unknown'}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{member.user?.name || 'Desconocido'}</p>
                 <p className="text-xs text-gray-400">{member.user?.email || ''}</p>
               </div>
               <span className="text-sm font-semibold text-gray-900 dark:text-white">{member.points.toLocaleString()} pts</span>

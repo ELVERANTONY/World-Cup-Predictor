@@ -22,6 +22,31 @@ const statusConfig: Record<string, { variant: 'info' | 'warning' | 'default' | '
   CANCELLED: { variant: 'danger', label: 'Cancelado' },
 }
 
+function translateStage(stage?: string | null): string {
+  if (!stage) return ''
+  const stageMap: Record<string, string> = {
+    // Fase de grupos
+    'Group A': 'Grupo A', 'Group B': 'Grupo B', 'Group C': 'Grupo C',
+    'Group D': 'Grupo D', 'Group E': 'Grupo E', 'Group F': 'Grupo F',
+    'Group G': 'Grupo G', 'Group H': 'Grupo H', 'Group I': 'Grupo I',
+    'Group J': 'Grupo J', 'Group K': 'Grupo K', 'Group L': 'Grupo L',
+    // Fases eliminatorias
+    'Round of 32': 'Ronda de 32',
+    'Round of 16': 'Octavos de Final',
+    'Quarter-final': 'Cuartos de Final',
+    'Quarter-finals': 'Cuartos de Final',
+    'Semi-final': 'Semifinal',
+    'Semi-finals': 'Semifinal',
+    '3rd Place': 'Tercer Puesto',
+    '3rd place play-off': 'Tercer Puesto',
+    'Final': 'Final',
+    'Round 1': 'Primera Ronda',
+    'Round 2': 'Segunda Ronda',
+    'Round 3': 'Tercera Ronda',
+  }
+  return stageMap[stage] ?? stage
+}
+
 export function MatchCard({ match }: MatchCardProps) {
   const navigate = useNavigate()
   const status = statusConfig[match.status] || { variant: 'default' as const, label: match.status }
@@ -64,7 +89,7 @@ export function MatchCard({ match }: MatchCardProps) {
           {match.status === 'LIVE' && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse mr-1" />}
           {status.label}
         </Badge>
-        <span className="text-xs text-gray-400">{match.stage}</span>
+        <span className="text-xs text-gray-400">{translateStage(match.stage)}</span>
       </div>
 
       <div className="flex items-center justify-between gap-4 mb-5 relative">

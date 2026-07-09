@@ -4,10 +4,18 @@ import { statisticsService } from '../services/statistics.service.js';
 export class StatisticsController {
   async getUserStats(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user!.userId;
+      const userId = (req.query.userId as string) || req.user?.userId;
+      if (!userId) {
+        res.status(401).json({ status: 'error', message: 'Unauthorized' });
+        return;
+      }
       const stats = await statisticsService.getUserStats(userId);
       res.json({ status: 'success', data: stats });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === 'User not found.') {
+        res.status(404).json({ status: 'error', message: 'User not found.' });
+        return;
+      }
       next(error);
     }
   }

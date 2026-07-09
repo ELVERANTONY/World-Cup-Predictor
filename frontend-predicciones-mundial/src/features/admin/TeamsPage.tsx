@@ -227,19 +227,19 @@ export function TeamsPage() {
             <Input label="Rank" type="number" value={form.rank.toString()} onChange={(e) => setForm({ ...form, rank: parseInt(e.target.value) || 0 })} />
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} loading={saving}>{editingTeam ? 'Save Changes' : 'Create Team'}</Button>
+            <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSave} loading={saving}>{editingTeam ? 'Guardar Cambios' : 'Crear Equipo'}</Button>
           </div>
         </div>
       </Modal>
 
-      <Modal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} title="Delete Team" size="sm">
+      <Modal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} title="Eliminar Equipo" size="sm">
         <p className="text-gray-600 dark:text-gray-400 text-sm">
-          Are you sure you want to delete <strong className="text-gray-900 dark:text-white">{deletingTeam?.name}</strong>? This action cannot be undone.
+          ¿Estás seguro de que deseas eliminar <strong className="text-gray-900 dark:text-white">{deletingTeam?.name}</strong>? Esta acción no se puede deshacer.
         </p>
         <div className="flex justify-end gap-3 pt-4">
-          <Button variant="ghost" onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
-          <Button variant="danger" onClick={handleDelete} loading={saving}>Delete</Button>
+          <Button variant="ghost" onClick={() => setDeleteModalOpen(false)}>Cancelar</Button>
+          <Button variant="danger" onClick={handleDelete} loading={saving}>Eliminar</Button>
         </div>
       </Modal>
     </motion.div>

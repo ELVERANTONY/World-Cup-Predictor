@@ -29,6 +29,15 @@ export async function getMatchInsights(id: string): Promise<string> {
   }
 }
 
+export async function askMatchInsight(id: string, question: string): Promise<string> {
+  try {
+    const response = await api.post<ApiResponse<{ answer: string }>>(`/matches/${id}/ask-insight`, { question });
+    return response.data.data.answer;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Error al procesar tu pregunta con la IA.");
+  }
+}
+
 export async function createMatch(data: Omit<Match, 'id'>): Promise<Match> {
   const response = await api.post<ApiResponse<Match>>('/matches', data);
   return response.data.data;

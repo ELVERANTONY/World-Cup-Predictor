@@ -28,17 +28,17 @@ function buildActivities(predictions: Prediction[]): Activity[] {
   const activities: Activity[] = predictions.map(p => ({
     id: p.id,
     type: 'prediction' as const,
-    message: `You predicted ${p.match?.homeTeam?.name || '?'} vs ${p.match?.awayTeam?.name || '?'} ${p.homeScore}-${p.awayScore}`,
+    message: `Pronosticaste ${p.match?.homeTeam?.name || '?'} vs ${p.match?.awayTeam?.name || '?'} ${p.homeScore}-${p.awayScore}`,
     timestamp: new Date(p.createdAt).toLocaleDateString(),
   }))
 
   activities.push(
-    { id: 'rank-1', type: 'rank', message: 'Check the global rankings', timestamp: 'Recently' },
+    { id: 'rank-1', type: 'rank', message: 'Revisa la clasificación global', timestamp: 'Recientemente' },
   )
 
   return activities.sort((a, b) => {
-    if (a.timestamp === 'Recently') return -1
-    if (b.timestamp === 'Recently') return 1
+    if (a.timestamp === 'Recientemente') return -1
+    if (b.timestamp === 'Recientemente') return 1
     return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   })
 }
@@ -52,10 +52,10 @@ export function ActivityFeed({ predictions = [] }: ActivityFeedProps) {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Actividad Reciente</h3>
       <div className="space-y-2">
         {activities.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">No recent activity</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">No hay actividad reciente</p>
         ) : (
           activities.slice(0, 5).map((activity, index) => {
             const Icon = iconMap[activity.type]

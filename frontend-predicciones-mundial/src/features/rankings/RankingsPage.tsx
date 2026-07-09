@@ -22,9 +22,9 @@ interface RankingEntry {
 
 const TABS = [
   { key: 'global', label: 'Global' },
-  { key: 'weekly', label: 'Weekly' },
-  { key: 'monthly', label: 'Monthly' },
-  { key: 'historical', label: 'Historical' },
+  { key: 'weekly', label: 'Semanal' },
+  { key: 'monthly', label: 'Mensual' },
+  { key: 'historical', label: 'Histórico' },
 ] as const
 
 type TabKey = typeof TABS[number]['key']
@@ -98,8 +98,8 @@ export function RankingsPage() {
 
       {error ? (
         <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4">
-          <p className="text-red-500">Failed to load rankings</p>
-          <Button variant="outline" onClick={() => window.location.reload()} iconLeft={<RefreshCw className="w-4 h-4" />}>Retry</Button>
+          <p className="text-red-500">Error al cargar la clasificación</p>
+          <Button variant="outline" onClick={() => window.location.reload()} iconLeft={<RefreshCw className="w-4 h-4" />}>Reintentar</Button>
         </div>
       ) : loading ? (
         <div className="space-y-4">
@@ -117,7 +117,7 @@ export function RankingsPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Trophy className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" />
-              <p className="text-gray-500 dark:text-gray-400">No rankings available</p>
+              <p className="text-gray-500 dark:text-gray-400">No hay clasificación disponible</p>
             </div>
           )}
         </motion.div>

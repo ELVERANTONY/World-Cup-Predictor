@@ -101,13 +101,16 @@ export class SyncService {
     const groundSet = new Set<string>();
     const groupSet = new Set<string>();
     const matchMap = new Map<string, OpenFootballMatch>();
+    const teamToGroup = new Map<string, string>();
 
     for (const match of data.matches) {
       if (match.team1 && !KNOCKOUT_REFERENCE.test(match.team1)) {
         teamSet.add(normalizeTeamName(match.team1));
+        if (match.group) teamToGroup.set(normalizeTeamName(match.team1), match.group);
       }
       if (match.team2 && !KNOCKOUT_REFERENCE.test(match.team2)) {
         teamSet.add(normalizeTeamName(match.team2));
+        if (match.group) teamToGroup.set(normalizeTeamName(match.team2), match.group);
       }
       if (match.ground) groundSet.add(match.ground);
       if (match.group) groupSet.add(match.group);
@@ -139,25 +142,42 @@ export class SyncService {
     logger.info(`Found ${teamSet.size} teams, ${groundSet.size} stadiums, ${groupSet.size} groups, ${resolvedMatches.length} resolvable matches`);
 
     // --- UPSERT TEAMS ---
+    const iso2Map: Record<string, string> = {
+      ARG: 'ar', BRA: 'br', FRA: 'fr', ENG: 'gb-eng', ESP: 'es', GER: 'de', POR: 'pt',
+      NED: 'nl', BEL: 'be', ITA: 'it', URU: 'uy', COL: 'co', USA: 'us', MEX: 'mx',
+      MAR: 'ma', CRO: 'hr', JPN: 'jp', SEN: 'sn', SUI: 'ch', ECU: 'ec', KOR: 'kr',
+      CAN: 'ca', GHA: 'gh', AUS: 'au', PER: 'pe', CHI: 'cl', SWE: 'se', POL: 'pl',
+      SRB: 'rs', IRN: 'ir', KSA: 'sa', QAT: 'qa', WAL: 'gb-wls', TUN: 'tn', CMR: 'cm',
+      CRC: 'cr', EGY: 'eg', PAN: 'pa', NGA: 'ng', CIV: 'ci', DZA: 'dz', TUR: 'tr',
+      NOR: 'no', PAR: 'py', VEN: 've', BOL: 'bo', JAM: 'jm', SLV: 'sv', HND: 'hn',
+      NZL: 'nz', RSA: 'za', IRQ: 'iq', UAE: 'ae', CHN: 'cn', SYR: 'sy', OMN: 'om',
+      UZB: 'uz', BHR: 'bh', JOR: 'jo', HAI: 'ht', CUR: 'cw', CZE: 'cz', SCO: 'gb-sct',
+      AUT: 'at', BIH: 'ba', CPV: 'cv', COD: 'cd', ALG: 'dz'
+    };
+
     let teamsCreated = 0;
     for (const teamName of teamSet) {
       const shortName = KNOWN_SHORT_NAMES[teamName] || teamName.substring(0, 3).toUpperCase();
+      const group = teamToGroup.get(teamName) || null;
+      const iso2 = iso2Map[shortName];
+      const flagUrl = iso2 ? `https://flagcdn.com/w320/${iso2}.png` : '';
+
       const existing = await prisma.team.findFirst({
         where: { OR: [{ name: teamName }, { shortName }] },
       });
       if (!existing) {
         await prisma.team.create({
-          data: {
-            name: teamName,
-            shortName,
-            flagUrl: `https://flagcdn.com/w320/${shortName.toLowerCase()}.png`,
-            group: [...groupSet].find(g => teamSet.has(teamName)) || null,
-          },
+          data: { name: teamName, shortName, flagUrl, group },
         });
         teamsCreated++;
+      } else {
+        await prisma.team.update({
+          where: { id: existing.id },
+          data: { group, flagUrl },
+        });
       }
     }
-    logger.info(`Created ${teamsCreated} new teams`);
+    logger.info(`Created ${teamsCreated} new teams and updated existing teams with groups/flags`);
 
     // --- UPSERT STADIUMS ---
     let stadiumsCreated = 0;

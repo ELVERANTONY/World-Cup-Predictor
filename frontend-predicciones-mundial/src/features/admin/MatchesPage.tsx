@@ -258,13 +258,13 @@ export function MatchesPage() {
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave} loading={saving}>{editingMatch ? 'Save Changes' : 'Create Match'}</Button>
+            <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSave} loading={saving}>{editingMatch ? 'Guardar Cambios' : 'Crear Partido'}</Button>
           </div>
         </div>
       </Modal>
 
-      <Modal open={resultModalOpen} onClose={() => setResultModalOpen(false)} title="Set Match Result" size="md">
+      <Modal open={resultModalOpen} onClose={() => setResultModalOpen(false)} title="Establecer Resultado" size="md">
         <div className="space-y-4">
           {scoringMatch && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -281,17 +281,17 @@ export function MatchesPage() {
             <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
               <input type="checkbox" checked={scoreForm.extraTime} onChange={(e) => setScoreForm({ ...scoreForm, extraTime: e.target.checked })}
                 className="rounded border-gray-300 dark:border-zinc-600" />
-              Extra Time
+              Extra Tiempo
             </label>
             <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
               <input type="checkbox" checked={scoreForm.penalties} onChange={(e) => setScoreForm({ ...scoreForm, penalties: e.target.checked })}
                 className="rounded border-gray-300 dark:border-zinc-600" />
-              Penalties
+              Penales
             </label>
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="ghost" onClick={() => setResultModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSetResult} loading={saving}>Set Result</Button>
+            <Button variant="ghost" onClick={() => setResultModalOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSetResult} loading={saving}>Establecer Resultado</Button>
           </div>
         </div>
       </Modal>

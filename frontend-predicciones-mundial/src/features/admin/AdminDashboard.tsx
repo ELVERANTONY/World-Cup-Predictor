@@ -256,7 +256,7 @@ export function AdminDashboard() {
 
           <Card>
             <CardHeader>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Actividad Reciente</h3>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -267,7 +267,7 @@ export function AdminDashboard() {
                 </div>
               ) : displayStats.recentActivity.length === 0 ? (
                 <div className="flex items-center justify-center h-32 text-gray-400 dark:text-gray-500 text-sm">
-                  No recent activity
+                  No hay actividad reciente
                 </div>
               ) : (
                 <div className="space-y-2">

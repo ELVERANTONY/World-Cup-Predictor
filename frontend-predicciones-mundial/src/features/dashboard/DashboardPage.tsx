@@ -45,7 +45,7 @@ export function DashboardPage() {
 
       {statsError ? (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
-          <p className="text-red-500">{statsError?.message || 'Error loading stats'}</p>
+          <p className="text-red-500">{statsError?.message || 'Error al cargar estadísticas'}</p>
           <button onClick={() => window.location.reload()} className="inline-flex items-center gap-2 text-sm text-worldcup-500 hover:text-worldcup-600 transition-colors">
             <RefreshCw className="w-4 h-4" /> Reintentar
           </button>
@@ -67,29 +67,15 @@ export function DashboardPage() {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Top row */}
             <div className="lg:col-span-2">
               <ActivityFeed predictions={predictions} />
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Acciones Rápidas</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {quickActions.map((action) => {
-                  const Icon = action.icon
-                  return (
-                    <Link key={action.to} to={action.to} className="group flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 hover:shadow-lg transition-all">
-                      <div className={`p-2.5 rounded-xl text-white ${action.color} group-hover:scale-110 transition-transform`}>
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{action.label}</span>
-                    </Link>
-                  )
-                })}
-              </div>
-
+            <div className="lg:col-span-1">
               {nextMatches.length > 0 && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="rounded-2xl bg-gradient-to-br from-worldcup-600 to-worldcup-800 p-5 text-white">
-                  <h4 className="font-semibold mb-2">Próximo Partido</h4>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="rounded-2xl bg-gradient-to-br from-worldcup-600 to-worldcup-800 p-5 text-white h-full flex flex-col justify-center">
+                  <h4 className="font-semibold mb-4 text-center">Próximo Partido</h4>
                   <div className="flex items-center gap-3 bg-white/10 p-3 rounded-xl backdrop-blur-sm">
                     <div className="flex items-center gap-2 flex-1">
                       {nextMatches[0].homeTeam?.flagUrl ? <img src={nextMatches[0].homeTeam.flagUrl.replace('w80/w80/', 'w80/')} alt="home" className="w-6 h-4 rounded-sm object-cover" /> : <span className="text-xl">🏳</span>}
@@ -101,12 +87,30 @@ export function DashboardPage() {
                       {nextMatches[0].awayTeam?.flagUrl ? <img src={nextMatches[0].awayTeam.flagUrl.replace('w80/w80/', 'w80/')} alt="away" className="w-6 h-4 rounded-sm object-cover" /> : <span className="text-xl">🏳</span>}
                     </div>
                   </div>
-                  <p className="text-sm opacity-90 mt-3 text-center bg-black/20 py-1.5 rounded-lg">{new Date(nextMatches[0].date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</p>
-                  <Link to={`/matches/${nextMatches[0].id}`} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-white/90 hover:text-white transition-colors">
+                  <p className="text-sm opacity-90 mt-4 text-center bg-black/20 py-2 rounded-lg">{new Date(nextMatches[0].date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                  <Link to={`/matches/${nextMatches[0].id}`} className="mt-4 flex justify-center items-center gap-1 text-sm font-medium text-white/90 hover:text-white transition-colors bg-white/10 hover:bg-white/20 py-2 rounded-lg">
                     Ver detalles <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </motion.div>
               )}
+            </div>
+
+            {/* Bottom row */}
+            <div className="lg:col-span-3 space-y-4 mt-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Acciones Rápidas</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {quickActions.map((action) => {
+                  const Icon = action.icon
+                  return (
+                    <Link key={action.to} to={action.to} className="group flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 hover:shadow-lg transition-all">
+                      <div className={`p-3 rounded-xl text-white ${action.color} group-hover:scale-110 transition-transform`}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{action.label}</span>
+                    </Link>
+                  )
+                })}
+              </div>
             </div>
           </div>
         </>

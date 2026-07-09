@@ -22,31 +22,31 @@ export function JoinRoomModal({ open, onClose, onJoined }: JoinRoomModalProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const errs: Record<string, string> = {}
-    if (!code.trim()) errs.code = 'Room code is required'
+    if (!code.trim()) errs.code = 'El código de la sala es requerido'
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
 
     setSubmitting(true)
     try {
       await joinRoom(code.trim(), password || undefined)
-      addToast('success', 'Joined room!')
+      addToast('success', '¡Unido a la sala!')
       onJoined()
       onClose()
       setCode('')
       setPassword('')
     } catch {
-      addToast('error', 'Failed to join room')
+      addToast('error', 'Error al unirse a la sala')
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Join Room" size="sm">
+    <Modal open={open} onClose={onClose} title="Unirse a la Sala" size="sm">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input label="Room Code" value={code} onChange={e => setCode(e.target.value.toUpperCase())} error={errors.code} placeholder="e.g. GOD2026" maxLength={10} />
-        <Input label="Password (if private)" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" />
-        <Button type="submit" loading={submitting} className="w-full" iconLeft={<LogIn className="w-4 h-4" />}>Join Room</Button>
+        <Input label="Código de la Sala" value={code} onChange={e => setCode(e.target.value.toUpperCase())} error={errors.code} placeholder="ej. GOD2026" maxLength={10} />
+        <Input label="Contraseña (si es privada)" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Ingresar contraseña" />
+        <Button type="submit" loading={submitting} className="w-full" iconLeft={<LogIn className="w-4 h-4" />}>Unirse a la Sala</Button>
       </form>
     </Modal>
   )
