@@ -13,6 +13,11 @@ import { StatisticsPage } from '@/features/statistics/StatisticsPage'
 import { GroupsPage } from '@/features/matches/GroupsPage'
 import { KnockoutsPage } from '@/features/matches/KnockoutsPage'
 import { AdminDashboard } from '@/features/admin/AdminDashboard'
+import { MatchesPage as AdminMatchesPage } from '@/features/admin/MatchesPage'
+import { TeamsPage as AdminTeamsPage } from '@/features/admin/TeamsPage'
+import { UsersPage as AdminUsersPage } from '@/features/admin/UsersPage'
+import { StadiumsPage as AdminStadiumsPage } from '@/features/admin/StadiumsPage'
+import { PredictionsPage as AdminPredictionsPage } from '@/features/admin/PredictionsPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { useAuth } from '@/hooks/useAuth'
@@ -63,9 +68,11 @@ export function useRoutesConfig(): RouteObject[] {
         { path: 'statistics', element: <StatisticsPage /> },
         { path: 'settings', element: <Navigate to="/profile" replace /> },
         { path: 'admin/dashboard', element: <AdminDashboard /> },
-        { path: 'admin/matches', element: <div className="p-8">Manage Matches (Coming Soon)</div> },
-        { path: 'admin/teams', element: <div className="p-8">Manage Teams (Coming Soon)</div> },
-        { path: 'admin/users', element: <div className="p-8">Manage Users (Coming Soon)</div> },
+        { path: 'admin/matches', element: <AdminMatchesPage /> },
+        { path: 'admin/teams', element: <AdminTeamsPage /> },
+        { path: 'admin/users', element: <AdminUsersPage /> },
+        { path: 'admin/stadiums', element: <AdminStadiumsPage /> },
+        { path: 'admin/predictions', element: <AdminPredictionsPage /> },
       ],
     },
     {
