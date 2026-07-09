@@ -35,10 +35,10 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
 
   const validate = (): boolean => {
     const errors: { email?: string; password?: string } = {};
-    if (!email) errors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(email)) errors.email = 'Invalid email format';
-    if (!password) errors.password = 'Password is required';
-    else if (password.length < 6) errors.password = 'Minimum 6 characters';
+    if (!email) errors.email = 'El correo es requerido';
+    else if (!/\S+@\S+\.\S+/.test(email)) errors.email = 'Formato de correo inválido';
+    if (!password) errors.password = 'La contraseña es requerida';
+    else if (password.length < 6) errors.password = 'Mínimo 6 caracteres';
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -52,7 +52,7 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
       await login(email, password);
       onSuccess?.();
     } catch {
-      setError('Invalid email or password');
+      setError('Correo o contraseña inválidos');
     } finally {
       setIsLoading(false);
     }
@@ -66,20 +66,20 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
       animate="visible"
     >
       <motion.div variants={itemVariants} className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">Sign in to your account</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Bienvenido de vuelta</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">Inicia sesión en tu cuenta</p>
       </motion.div>
 
       <motion.form onSubmit={handleSubmit} className="space-y-5" variants={itemVariants}>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Correo electrónico</label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
+              placeholder="Ingresa tu correo"
               className={cn(
                 'w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
                 fieldErrors.email
@@ -92,14 +92,14 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Contraseña</label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Ingresa tu contraseña"
               className={cn(
                 'w-full pl-10 pr-10 py-2.5 rounded-lg border bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
                 fieldErrors.password
@@ -126,14 +126,14 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
               onChange={(e) => setRememberMe(e.target.checked)}
               className="w-4 h-4 rounded border-gray-300 dark:border-zinc-600 text-worldcup-600 focus:ring-worldcup-500/30"
             />
-            <span className="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Recordarme</span>
           </label>
           <button
             type="button"
             onClick={onForgotPassword}
             className="text-sm text-worldcup-600 dark:text-worldcup-400 hover:underline font-medium"
           >
-            Forgot password?
+            ¿Olvidaste tu contraseña?
           </button>
         </div>
 
@@ -160,14 +160,14 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
           )}
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
-          {isLoading ? 'Signing in...' : 'Sign in'}
+          {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
         </motion.button>
       </motion.form>
 
       <motion.div variants={itemVariants} className="mt-6">
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-700" />
-          <span className="text-sm text-gray-400 dark:text-gray-500">or</span>
+          <span className="text-sm text-gray-400 dark:text-gray-500">o</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-700" />
         </div>
 
@@ -179,11 +179,11 @@ export function LoginForm({ onForgotPassword, onSuccess }: LoginFormProps) {
                   await googleLogin(credentialResponse.credential);
                   onSuccess?.();
                 } catch {
-                  setError('Google login failed');
+                  setError('Falló el inicio de sesión con Google');
                 }
               }
             }}
-            onError={() => setError('Google login failed')}
+            onError={() => setError('Falló el inicio de sesión con Google')}
             size="large"
             width={400}
           />

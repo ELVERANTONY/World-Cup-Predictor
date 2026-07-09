@@ -1,14 +1,11 @@
 import { motion } from 'motion/react'
-import { Edit2, Clock } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import type { Prediction } from '@/types'
-import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { GlowCard } from '@/components/ui/spotlight-card'
 
 interface PredictionCardProps {
   prediction: Prediction
-  onEdit?: (prediction: Prediction) => void
 }
 
 const statusBadge: Record<string, { variant: 'success' | 'warning' | 'info' | 'default' | 'danger'; label: string }> = {
@@ -19,9 +16,8 @@ const statusBadge: Record<string, { variant: 'success' | 'warning' | 'info' | 'd
   CANCELLED: { variant: 'danger', label: 'Cancelado' },
 }
 
-export function PredictionCard({ prediction, onEdit }: PredictionCardProps) {
+export function PredictionCard({ prediction }: PredictionCardProps) {
   const { match } = prediction
-  const isUpcoming = match?.status === 'SCHEDULED'
   const isFinished = match?.status === 'FINISHED'
 
   const isCorrect = isFinished && match.homeScore === prediction.homeScore && match.awayScore === prediction.awayScore
@@ -116,7 +112,7 @@ export function PredictionCard({ prediction, onEdit }: PredictionCardProps) {
               <Clock className="w-3 h-3" />
               <span>{match ? new Date(match.date).toLocaleDateString() : ''}</span>
             </div>
-            <span>{match?.stage || ''}</span>
+            <span>{translatedStage}</span>
           </div>
         </motion.div>
       </GlowCard>

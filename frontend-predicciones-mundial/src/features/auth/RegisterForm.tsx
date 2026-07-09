@@ -31,10 +31,10 @@ function getPasswordStrength(password: string): { label: string; color: string; 
   const hasSpecial = /[^A-Za-z0-9]/.test(password);
   const score = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length + (length >= 8 ? 1 : 0);
 
-  if (length < 6 || score <= 1) return { label: 'Weak', color: 'bg-red-500', width: '25%' };
-  if (score <= 2) return { label: 'Fair', color: 'bg-orange-500', width: '50%' };
-  if (score <= 3) return { label: 'Good', color: 'bg-yellow-500', width: '75%' };
-  return { label: 'Strong', color: 'bg-green-500', width: '100%' };
+  if (length < 6 || score <= 1) return { label: 'Débil', color: 'bg-red-500', width: '25%' };
+  if (score <= 2) return { label: 'Regular', color: 'bg-orange-500', width: '50%' };
+  if (score <= 3) return { label: 'Bueno', color: 'bg-yellow-500', width: '75%' };
+  return { label: 'Fuerte', color: 'bg-green-500', width: '100%' };
 }
 
 export function RegisterForm({ onSuccess }: RegisterFormProps) {
@@ -55,14 +55,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
   const validate = (): boolean => {
     const errors: Record<string, string> = {};
-    if (!formData.fullName.trim()) errors.fullName = 'Full name is required';
-    if (!formData.email) errors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Invalid email format';
-    if (!formData.password) errors.password = 'Password is required';
-    else if (formData.password.length < 6) errors.password = 'Minimum 6 characters';
-    if (!formData.confirmPassword) errors.confirmPassword = 'Please confirm your password';
-    else if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'Passwords do not match';
-    if (!acceptTerms) errors.acceptTerms = 'You must accept the terms';
+    if (!formData.fullName.trim()) errors.fullName = 'El nombre es requerido';
+    if (!formData.email) errors.email = 'El correo es requerido';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Formato de correo inválido';
+    if (!formData.password) errors.password = 'La contraseña es requerida';
+    else if (formData.password.length < 6) errors.password = 'Mínimo 6 caracteres';
+    if (!formData.confirmPassword) errors.confirmPassword = 'Por favor confirma tu contraseña';
+    else if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'Las contraseñas no coinciden';
+    if (!acceptTerms) errors.acceptTerms = 'Debes aceptar los términos';
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -76,7 +76,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       await register(formData.fullName, formData.email, formData.password);
       onSuccess?.();
     } catch {
-      setError('Registration failed. Please try again.');
+      setError('Error al registrarse. Por favor intenta nuevamente.');
     } finally {
       setIsLoading(false);
     }
@@ -90,20 +90,20 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       animate="visible"
     >
       <motion.div variants={itemVariants} className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create account</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">Join the World Cup Predictor</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Crear cuenta</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">Únete a World Cup Predictor</p>
       </motion.div>
 
       <motion.form onSubmit={handleSubmit} className="space-y-4" variants={itemVariants}>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full name</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nombre completo</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               value={formData.fullName}
               onChange={(e) => updateField('fullName', e.target.value)}
-              placeholder="Enter your full name"
+              placeholder="Ingresa tu nombre completo"
               className={cn(
                 'w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
                 fieldErrors.fullName
@@ -116,14 +116,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Correo electrónico</label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="email"
               value={formData.email}
               onChange={(e) => updateField('email', e.target.value)}
-              placeholder="Enter your email address"
+              placeholder="Ingresa tu correo"
               className={cn(
                 'w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
                 fieldErrors.email
@@ -136,14 +136,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Contraseña</label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type={showPassword ? 'text' : 'password'}
               value={formData.password}
               onChange={(e) => updateField('password', e.target.value)}
-              placeholder="Create a password"
+              placeholder="Crea una contraseña"
               className={cn(
                 'w-full pl-10 pr-10 py-2.5 rounded-lg border bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
                 fieldErrors.password
@@ -165,7 +165,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                 <div className={cn('h-1 rounded-full transition-all', strength.color)} style={{ width: strength.width }} />
               </div>
               <p className={cn('text-xs mt-1', strength.color === 'bg-red-500' ? 'text-red-500' : strength.color === 'bg-orange-500' ? 'text-orange-500' : strength.color === 'bg-yellow-500' ? 'text-yellow-500' : 'text-green-500')}>
-                Password strength: {strength.label}
+                Fuerza de la contraseña: {strength.label}
               </p>
             </div>
           )}
@@ -173,14 +173,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Confirm password</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Confirmar contraseña</label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type={showConfirm ? 'text' : 'password'}
               value={formData.confirmPassword}
               onChange={(e) => updateField('confirmPassword', e.target.value)}
-              placeholder="Confirm your password"
+              placeholder="Confirma tu contraseña"
               className={cn(
                 'w-full pl-10 pr-10 py-2.5 rounded-lg border bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
                 fieldErrors.confirmPassword
@@ -207,10 +207,10 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
             className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-zinc-600 text-worldcup-600 focus:ring-worldcup-500/30"
           />
           <label className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-            I accept the{' '}
-            <a href="#" className="text-worldcup-600 dark:text-worldcup-400 hover:underline">Terms of Service</a>
-            {' '}and{' '}
-            <a href="#" className="text-worldcup-600 dark:text-worldcup-400 hover:underline">Privacy Policy</a>
+            Acepto los{' '}
+            <a href="#" className="text-worldcup-600 dark:text-worldcup-400 hover:underline">Términos de Servicio</a>
+            {' '}y la{' '}
+            <a href="#" className="text-worldcup-600 dark:text-worldcup-400 hover:underline">Política de Privacidad</a>
           </label>
         </div>
         {fieldErrors.acceptTerms && <p className="text-red-500 text-xs">{fieldErrors.acceptTerms}</p>}
@@ -238,14 +238,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           )}
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
-          {isLoading ? 'Creating account...' : 'Create account'}
+          {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
         </motion.button>
       </motion.form>
 
       <motion.div variants={itemVariants} className="mt-6">
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-700" />
-          <span className="text-sm text-gray-400 dark:text-gray-500">or</span>
+          <span className="text-sm text-gray-400 dark:text-gray-500">o</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-700" />
         </div>
 
@@ -257,11 +257,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                   await googleLogin(credentialResponse.credential);
                   onSuccess?.();
                 } catch {
-                  setError('Google signup failed');
+                  setError('Falló el registro con Google');
                 }
               }
             }}
-            onError={() => setError('Google signup failed')}
+            onError={() => setError('Falló el registro con Google')}
             size="large"
             width={400}
           />

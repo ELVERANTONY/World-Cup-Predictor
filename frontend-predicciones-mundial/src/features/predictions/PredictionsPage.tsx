@@ -146,7 +146,7 @@ export function PredictionsPage() {
           <AnimatePresence mode="popLayout">
             {filtered.map(p => (
               <motion.div key={p.id} variants={staggerItem} layout>
-                <PredictionCard prediction={p} onEdit={p.match?.status === 'SCHEDULED' ? setEditingPrediction : undefined} />
+                <PredictionCard prediction={p} />
               </motion.div>
             ))}
           </AnimatePresence>
