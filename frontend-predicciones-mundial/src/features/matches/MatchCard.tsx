@@ -77,6 +77,7 @@ export function MatchCard({ match }: MatchCardProps) {
   }
 
   return (
+    <>
     <div onClick={() => navigate(`/matches/${match.id}`)} className="cursor-pointer h-full">
       <GlowCard customSize={true} className="p-5 flex flex-col h-full bg-white dark:bg-zinc-900 border border-gray-200/60 dark:border-zinc-700/60 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
       <motion.div
@@ -124,9 +125,6 @@ export function MatchCard({ match }: MatchCardProps) {
           <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{match.stadium?.name || match.stadiumId || 'TBD'}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-worldcup-500 hover:text-worldcup-600 dark:text-worldcup-400 p-1" onClick={handleInsightsClick} iconLeft={<Sparkles className="w-4 h-4" />}>
-            IA
-          </Button>
           {match.status === 'SCHEDULED' && (
             <Button variant="primary" size="sm" onClick={e => { e.stopPropagation(); navigate(`/matches/${match.id}`) }} iconRight={<ChevronRight className="w-3 h-3" />}>Predecir</Button>
           )}
@@ -134,6 +132,7 @@ export function MatchCard({ match }: MatchCardProps) {
       </div>
       </motion.div>
       </GlowCard>
+    </div>
 
       <Modal open={showInsights} onClose={() => setShowInsights(false)} title="Análisis de IA" size="md">
         <div className="flex flex-col gap-4 p-2">
@@ -163,6 +162,6 @@ export function MatchCard({ match }: MatchCardProps) {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   )
 }

@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Target, RefreshCw, Trophy } from 'lucide-react'
-import { useMyPredictions, useTeams, useCreatePrediction, useUpdatePrediction, useUpdatePredictedWinner } from '@/hooks/useQueries'
+import { useMyPredictions, useTeams, useMatches, useCreatePrediction, useUpdatePrediction, useUpdatePredictedWinner } from '@/hooks/useQueries'
 import type { Prediction } from '@/types'
 import { PredictionCard } from './PredictionCard'
 import { GlowCard } from '@/components/ui/spotlight-card'
@@ -19,7 +19,19 @@ export function PredictionsPage() {
   const { user } = useAuth()
   const { data: predictions = [], isLoading: loading, error: predictionsError } = useMyPredictions()
   const { data: teams = [] } = useTeams()
+  const { data: allMatches = [] } = useMatches()
   const createPredictionMutation = useCreatePrediction()
+  const activeTeams = useMemo(() => {
+    const activeIds = new Set<string>()
+    for (const m of allMatches) {
+      if (m.status === 'SCHEDULED' || m.status === 'LIVE') {
+        if (m.homeTeamId) activeIds.add(m.homeTeamId)
+        if (m.awayTeamId) activeIds.add(m.awayTeamId)
+      }
+    }
+    if (activeIds.size === 0) return teams
+    return teams.filter(t => activeIds.has(t.id))
+  }, [allMatches, teams])
   const updatePredictionMutation = useUpdatePrediction()
   const updatePredictedWinnerMutation = useUpdatePredictedWinner()
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'finished'>('all')
@@ -165,7 +177,7 @@ export function PredictionsPage() {
         <div className="space-y-4">
           <p className="text-sm text-gray-500 dark:text-gray-400">Selecciona al equipo que crees que ganará la Copa del Mundo 2026.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto p-1">
-            {teams.map(team => (
+            {activeTeams.map(team => (
               <button
                 key={team.id}
                 onClick={() => setSelectedWinnerId(team.id)}

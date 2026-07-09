@@ -54,8 +54,7 @@ export function RankingTable({ entries, showAccuracy = true }: RankingTableProps
                       ) : entry.user.name?.charAt(0) || '?'}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={cn('text-sm truncate', isMe ? 'text-worldcup-700 dark:text-worldcup-400 font-bold' : 'text-gray-900 dark:text-white font-medium')}>{entry.user.name}{isMe && <span className="ml-1 text-xs opacity-70">(tú)</span>}</p>
-                      <p className="text-xs text-gray-400 truncate">{entry.user.email}</p>
+                      <p className={cn('text-sm truncate', isMe ? 'text-worldcup-700 dark:text-worldcup-400 font-bold' : 'text-gray-900 dark:text-white font-medium')}>{entry.user.name || 'Anónimo'}{isMe && <span className="ml-1 text-xs opacity-70">(tú)</span>}</p>
                     </div>
                   </div>
                 </td>
