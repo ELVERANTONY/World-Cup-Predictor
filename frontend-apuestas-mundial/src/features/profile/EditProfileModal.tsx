@@ -1,0 +1,63 @@
+import { useState, useEffect } from 'react'
+import { Modal } from '@/components/ui/modal'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useTeams } from '@/hooks/useQueries'
+import { useToast } from '@/components/ui/toast'
+import { Save } from 'lucide-react'
+
+interface EditProfileModalProps {
+  open: boolean
+  onClose: () => void
+  initialData: { name: string; avatarUrl?: string | null; favoriteTeamId?: string | null }
+  onSave: (data: { name: string; avatarUrl?: string; favoriteTeamId?: string }) => Promise<void>
+}
+
+export function EditProfileModal({ open, onClose, initialData, onSave }: EditProfileModalProps) {
+  const { addToast } = useToast()
+  const [name, setName] = useState(initialData.name)
+  const [avatarUrl, setAvatarUrl] = useState(initialData.avatarUrl || '')
+  const [favoriteTeamId, setFavoriteTeamId] = useState(initialData.favoriteTeamId || '')
+  const { data: teams = [] } = useTeams()
+  const [saving, setSaving] = useState(false)
+
+
+
+  useEffect(() => {
+    setName(initialData.name)
+    setAvatarUrl(initialData.avatarUrl || '')
+    setFavoriteTeamId(initialData.favoriteTeamId || '')
+  }, [initialData])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!name.trim()) { addToast('error', 'Name is required'); return }
+    setSaving(true)
+    try {
+      await onSave({ name: name.trim(), avatarUrl: avatarUrl || undefined, favoriteTeamId: favoriteTeamId || undefined })
+      addToast('success', 'Profile updated!')
+      onClose()
+    } catch {
+      addToast('error', 'Failed to update profile')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <Modal open={open} onClose={onClose} title="Edit Profile" size="md">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input label="Full Name" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" />
+        <Input label="Avatar URL" value={avatarUrl} onChange={e => setAvatarUrl(e.target.value)} placeholder="https://example.com/avatar.jpg" />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Favorite Team</label>
+          <select value={favoriteTeamId} onChange={e => setFavoriteTeamId(e.target.value)} className="w-full rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800/50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-worldcup-500">
+            <option value="">No favorite team</option>
+            {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+          </select>
+        </div>
+        <Button type="submit" loading={saving} className="w-full" iconLeft={<Save className="w-4 h-4" />}>Save Changes</Button>
+      </form>
+    </Modal>
+  )
+}

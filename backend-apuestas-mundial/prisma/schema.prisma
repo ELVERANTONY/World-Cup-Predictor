@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  POSTPONED
+  CANCELLED
+}
+
+enum RoomRole {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  password       String?
+  name           String?
+  avatarUrl      String?
+  googleId       String?          @unique
+  role           Role             @default(USER)
+  favoriteTeamId String?
+  favoriteTeam   Team?            @relation("FavoriteTeam", fields: [favoriteTeamId], references: [id])
+  level          Int              @default(1)
+  xp             Int              @default(0)
+  totalPoints    Int              @default(0)
+  accuracyRate   Float            @default(0.0)
+  rank           Int              @default(0)
+  maxStreak      Int              @default(0)
+  currentStreak  Int              @default(0)
+  predictionsCount Int            @default(0)
+  emailVerified  Boolean          @default(false)
+  verificationToken String?
+  resetToken     String?
+  resetTokenExp  DateTime?
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  predictedWinnerId String?
+  predictedWinner   Team?            @relation("PredictedWinner", fields: [predictedWinnerId], references: [id])
+
+  predictions    Prediction[]
+  rooms          RoomMember[]
+  activities     Activity[]
+  createdRooms   Room[]           @relation("CreatedRooms")
+  refreshTokens  RefreshToken[]
+  achievements   UserAchievement[]
+  notifications  Notification[]
+  auditLogs      AuditLog[]
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  shortName    String   @unique
+  flagUrl      String
+  group        String?
+  rank         Int      @default(0)
+  points       Int      @default(0)
+  played       Int      @default(0)
+  won          Int      @default(0)
+  drawn        Int      @default(0)
+  lost         Int      @default(0)
+  goalsFor     Int      @default(0)
+  goalsAgainst Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  homeMatches    Match[] @relation("HomeTeam")
+  awayMatches    Match[] @relation("AwayTeam")
+  favoriteByUsers User[] @relation("FavoriteTeam")
+  predictedByUsers User[] @relation("PredictedWinner")
+}
+
+model Stadium {
+  id        String   @id @default(cuid())
+  name      String
+  city      String
+  country   String
+  capacity  Int
+  imageUrl  String?
+  latitude  Float?
+  longitude Float?
+  surface   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  matches   Match[]
+}
+
+model Match {
+  id         String      @id @default(cuid())
+  homeTeamId String
+  awayTeamId String
+  homeTeam   Team        @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam   Team        @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  stadiumId  String?
+  stadium    Stadium?    @relation(fields: [stadiumId], references: [id])
+  date       DateTime
+  stage      String
+  status     MatchStatus @default(SCHEDULED)
+  homeScore  Int?
+  awayScore  Int?
+  referee    String?
+  extraTime  Boolean     @default(false)
+  penalties  Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  predictions Prediction[]
+}
+
+model Prediction {
+  id        String   @id @default(cuid())
+  userId    String
+  matchId   String
+  user      User     @relation(fields: [userId], references: [id])
+  match     Match    @relation(fields: [matchId], references: [id])
+  homeScore Int
+  awayScore Int
+  points    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId, matchId])
+}
+
+model Room {
+  id          String      @id @default(cuid())
+  name        String
+  code        String      @unique
+  description String?
+  password    String?
+  color       String?     @default("#1457D9")
+  createdById String
+  createdBy   User        @relation("CreatedRooms", fields: [createdById], references: [id])
+  isPublic    Boolean     @default(true)
+  maxMembers  Int         @default(20)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  members     RoomMember[]
+}
+
+model RoomMember {
+  id     String   @id @default(cuid())
+  roomId String
+  userId String
+  room   Room     @relation(fields: [roomId], references: [id])
+  user   User     @relation(fields: [userId], references: [id])
+  points Int      @default(0)
+  rank   Int      @default(0)
+  role   RoomRole @default(MEMBER)
+  joinedAt DateTime @default(now())
+  @@unique([roomId, userId])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  message   String
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Achievement {
+  id          String           @id @default(cuid())
+  name        String
+  description String
+  iconUrl     String?
+  criteria    String
+  createdAt   DateTime         @default(now())
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  progress      Int         @default(0)
+  unlockedAt    DateTime?
+  createdAt     DateTime    @default(now())
+  @@unique([userId, achievementId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
