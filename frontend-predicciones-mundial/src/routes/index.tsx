@@ -61,13 +61,7 @@ export function useRoutesConfig(): RouteObject[] {
         { path: 'rooms/:id', element: <RoomDetailPage /> },
         { path: 'profile', element: <ProfilePage /> },
         { path: 'statistics', element: <StatisticsPage /> },
-        {
-          path: 'settings',
-          element: <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Coming soon</p>
-          </div>,
-        },
+        { path: 'settings', element: <Navigate to="/profile" replace /> },
         { path: 'admin/dashboard', element: <AdminDashboard /> },
         { path: 'admin/matches', element: <div className="p-8">Manage Matches (Coming Soon)</div> },
         { path: 'admin/teams', element: <div className="p-8">Manage Teams (Coming Soon)</div> },
