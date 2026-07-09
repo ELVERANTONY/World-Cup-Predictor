@@ -13,7 +13,7 @@ export class StatisticsService {
           include: { achievement: true },
         },
         _count: {
-          select: { rooms: true, notifications: { where: { read: false } } },
+          select: { rooms: true },
         },
       },
     });

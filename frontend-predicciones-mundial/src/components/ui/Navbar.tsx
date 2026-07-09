@@ -1,12 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import {
-  Menu, Bell, Moon, Sun, Trophy, LogOut, User, Settings, ChevronDown, BarChart3,
+  Menu, Moon, Sun, Trophy, LogOut, User, Settings, ChevronDown, BarChart3,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { getUnreadCount } from '@/services/notification.service'
-import { NotificationsPanel } from '@/features/notifications/NotificationsPanel'
 
 interface NavbarProps {
   onMenuClick: () => void
@@ -20,17 +18,6 @@ export function Navbar({ onMenuClick }: NavbarProps) {
     return false
   })
   const [showUserMenu, setShowUserMenu] = useState(false)
-  const [showNotifications, setShowNotifications] = useState(false)
-  const [unreadCount, setUnreadCount] = useState(0)
-
-  useEffect(() => {
-    const root = document.documentElement
-    root.classList.toggle('dark', isDark)
-  }, [isDark])
-
-  useEffect(() => {
-    getUnreadCount().then(r => setUnreadCount(r.count)).catch(() => {})
-  }, [])
 
   return (
     <header className="sticky top-0 z-40">
@@ -45,31 +32,12 @@ export function Navbar({ onMenuClick }: NavbarProps) {
               <Trophy className="w-6 h-6 text-worldcup-500" />
               <span className="hidden sm:block font-bold text-lg text-gray-900 dark:text-white">World Cup <span className="text-worldcup-500">2026</span></span>
             </Link>
-
-
           </div>
 
           <div className="flex items-center gap-2">
             <button onClick={() => setIsDark(!isDark)} className="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-
-            <div className="relative">
-              <button onClick={() => setShowNotifications(!showNotifications)} className="p-2 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors relative">
-                <Bell className="w-5 h-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white dark:ring-surface-dark">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </button>
-              <NotificationsPanel
-                open={showNotifications}
-                onClose={() => setShowNotifications(false)}
-                unreadCount={unreadCount}
-                onCountChange={setUnreadCount}
-              />
-            </div>
 
             <div className="relative">
               <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">

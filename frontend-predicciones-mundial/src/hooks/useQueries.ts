@@ -5,7 +5,6 @@ import { getStadiums, createStadium, updateStadium, deleteStadium } from '@/serv
 import { getMyPredictions, getMatchPredictions, createPrediction, updatePrediction } from '@/services/prediction.service';
 import { getGlobalRanking, getRoomRanking, getWeeklyRanking, getMonthlyRanking, getHistoricalRanking } from '@/services/ranking.service';
 import { getRooms, getMyRooms, getRoom, createRoom, joinRoom, leaveRoom, kickMember } from '@/services/room.service';
-import { getNotifications, getUnreadCount, markAsRead, markAllAsRead } from '@/services/notification.service';
 import { getUserStats, getGlobalStats, getGroupStats } from '@/services/statistics.service';
 import { getUsers, updateUserRole, toggleUserActive, updatePredictedWinner } from '@/services/user.service';
 import { getDashboardStats, syncWorldCupData } from '@/services/admin.service';
@@ -146,24 +145,6 @@ export function useRoom(id: string, options?: Partial<{ enabled: boolean }>) {
     queryFn: () => getRoom(id),
     staleTime: 5 * 60 * 1000,
     enabled: !!id,
-    ...options,
-  });
-}
-
-export function useNotifications(options?: Partial<{ enabled: boolean }>) {
-  return useQuery({
-    queryKey: ['notifications'],
-    queryFn: getNotifications,
-    staleTime: 1 * 60 * 1000,
-    ...options,
-  });
-}
-
-export function useUnreadCount(options?: Partial<{ enabled: boolean }>) {
-  return useQuery({
-    queryKey: ['notifications', 'unreadCount'],
-    queryFn: getUnreadCount,
-    staleTime: 1 * 60 * 1000,
     ...options,
   });
 }
@@ -385,26 +366,6 @@ export function useKickMember() {
     mutationFn: ({ roomId, userId }: { roomId: string; userId: string }) => kickMember(roomId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['room'] });
-    },
-  });
-}
-
-export function useMarkAsRead() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => markAsRead(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
-    },
-  });
-}
-
-export function useMarkAllAsRead() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: () => markAllAsRead(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
   });
 }

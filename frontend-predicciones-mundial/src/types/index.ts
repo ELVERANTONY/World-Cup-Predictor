@@ -107,17 +107,6 @@ export interface RoomMember {
   room?: Room;
 }
 
-export interface Notification {
-  id: string;
-  userId: string;
-  type: string;
-  title: string;
-  message: string;
-  read: boolean;
-  metadata: any;
-  createdAt: string;
-}
-
 export interface Achievement {
   id: string;
   name: string;

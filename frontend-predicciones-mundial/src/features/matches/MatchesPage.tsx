@@ -74,24 +74,24 @@ export function MatchesPage() {
     <div className="max-w-7xl mx-auto space-y-6">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Partidos</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Navega por todos los partidos del Mundial 2026</p>
+        <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium">Navega por todos los partidos del Mundial 2026</p>
       </motion.div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white dark:bg-surface-dark p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white dark:bg-surface-dark p-4 rounded-2xl border border-gray-300 dark:border-zinc-800 shadow-md">
         <div className="flex flex-wrap gap-3">
-          <select value={stageFilter} onChange={e => setStageFilter(e.target.value)} className="px-4 py-2.5 rounded-xl text-sm font-medium border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-worldcup-500 appearance-none min-w-[140px]">
+          <select value={stageFilter} onChange={e => setStageFilter(e.target.value)} className="px-4 py-2.5 rounded-xl text-sm font-semibold border border-gray-300 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-worldcup-500 appearance-none min-w-[140px]">
             {STAGES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
 
-          <select value={teamFilter} onChange={e => setTeamFilter(e.target.value)} className="px-4 py-2.5 rounded-xl text-sm font-medium border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-worldcup-500 appearance-none min-w-[140px]">
+          <select value={teamFilter} onChange={e => setTeamFilter(e.target.value)} className="px-4 py-2.5 rounded-xl text-sm font-semibold border border-gray-300 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-worldcup-500 appearance-none min-w-[140px]">
             <option value="all">Todos los Equipos</option>
             {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
         </div>
 
-        <div className="flex gap-1.5 p-1 rounded-xl bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700">
+        <div className="flex gap-1.5 p-1 rounded-xl bg-gray-200 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700">
           {STATUSES.map(s => (
-            <button key={s} onClick={() => setStatusFilter(s)} className={cn('px-4 py-1.5 rounded-lg text-sm font-semibold transition-all', statusFilter === s ? 'bg-white dark:bg-zinc-700 text-worldcup-600 dark:text-worldcup-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200')}>
+            <button key={s} onClick={() => setStatusFilter(s)} className={cn('px-4 py-1.5 rounded-lg text-sm font-semibold transition-all', statusFilter === s ? 'bg-white dark:bg-zinc-700 text-worldcup-600 dark:text-worldcup-400 shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200')}>
               {s === 'Todos' ? 'Todos' : s === 'SCHEDULED' ? 'Por jugar' : s === 'LIVE' ? 'En vivo' : 'Terminado'}
             </button>
           ))}

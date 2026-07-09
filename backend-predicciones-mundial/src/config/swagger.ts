@@ -230,9 +230,6 @@ const options: swaggerJsdoc.Options = {
       '/api/v1/rankings/monthly': {
         get: { tags: ['Rankings'], summary: 'Get monthly ranking', responses: { '200': { description: 'Monthly ranking' } } },
       },
-      '/api/v1/notifications': {
-        get: { tags: ['Notifications'], summary: 'Get user notifications', security: [{ bearerAuth: [] }], responses: { '200': { description: 'Notifications' } } },
-      },
       '/api/v1/statistics/global': {
         get: { tags: ['Statistics'], summary: 'Get global statistics', responses: { '200': { description: 'Global stats' } } },
       },

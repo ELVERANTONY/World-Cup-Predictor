@@ -288,7 +288,6 @@ export class AuthService {
           select: {
             predictions: true,
             rooms: true,
-            notifications: { where: { read: false } },
           },
         },
       },

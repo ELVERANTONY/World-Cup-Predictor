@@ -79,7 +79,7 @@ export function MatchCard({ match }: MatchCardProps) {
   return (
     <>
     <div onClick={() => navigate(`/matches/${match.id}`)} className="cursor-pointer h-full">
-      <GlowCard customSize={true} className="p-5 flex flex-col h-full bg-white dark:bg-zinc-900 border border-gray-200/60 dark:border-zinc-700/60 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
+      <GlowCard customSize={true} className="p-5 flex flex-col h-full bg-white dark:bg-zinc-900 border border-gray-300/80 dark:border-zinc-700/60 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl">
       <motion.div
         whileHover={{ y: -4, scale: 1.01 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -90,7 +90,7 @@ export function MatchCard({ match }: MatchCardProps) {
           {match.status === 'LIVE' && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse mr-1" />}
           {status.label}
         </Badge>
-        <span className="text-xs text-gray-400">{translateStage(match.stage)}</span>
+        <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">{translateStage(match.stage)}</span>
       </div>
 
       <div className="flex items-center justify-between gap-4 mb-5 relative">
@@ -103,7 +103,7 @@ export function MatchCard({ match }: MatchCardProps) {
           {match.status === 'FINISHED' && match.homeScore !== null ? (
             <div className="text-center bg-gray-100 dark:bg-zinc-800/50 px-4 py-2 rounded-xl border border-gray-200 dark:border-zinc-700/50">
               <p className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{match.homeScore} - {match.awayScore}</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Finalizado</p>
+              <p className="text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest mt-0.5">Finalizado</p>
             </div>
           ) : (
             <div className="text-center bg-worldcup-50 dark:bg-worldcup-500/10 px-4 py-2 rounded-xl border border-worldcup-100 dark:border-worldcup-500/20">
@@ -119,7 +119,7 @@ export function MatchCard({ match }: MatchCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs text-gray-400 mt-4 pt-4 border-t border-gray-100 dark:border-zinc-800/50">
+      <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mt-4 pt-4 border-t border-gray-200 dark:border-zinc-800/50">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(match.date).toLocaleDateString()}</span>
           <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{match.stadium?.name || match.stadiumId || 'TBD'}</span>
