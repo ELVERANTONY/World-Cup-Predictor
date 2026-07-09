@@ -1,14 +1,10 @@
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { Calendar, MapPin, ChevronRight } from 'lucide-react'
-import { useState } from 'react'
 import type { Match } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { GlowCard } from '@/components/ui/spotlight-card'
-import { Modal } from '@/components/ui/modal'
-import { getMatchInsights } from '@/services/match.service'
-import { Sparkles, Loader2 } from 'lucide-react'
 
 interface MatchCardProps {
   match: Match
@@ -50,20 +46,6 @@ function translateStage(stage?: string | null): string {
 export function MatchCard({ match }: MatchCardProps) {
   const navigate = useNavigate()
   const status = statusConfig[match.status] || { variant: 'default' as const, label: match.status }
-  const [showInsights, setShowInsights] = useState(false)
-  const [insights, setInsights] = useState<string | null>(null)
-  const [loadingInsights, setLoadingInsights] = useState(false)
-
-  const handleInsightsClick = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setShowInsights(true)
-    if (!insights) {
-      setLoadingInsights(true)
-      const data = await getMatchInsights(match.id)
-      setInsights(data)
-      setLoadingInsights(false)
-    }
-  }
 
   const renderFlag = (flagUrl?: string, alt?: string) => {
     if (!flagUrl) return <span className="text-3xl">🏳</span>;
@@ -133,35 +115,5 @@ export function MatchCard({ match }: MatchCardProps) {
       </motion.div>
       </GlowCard>
     </div>
-
-      <Modal open={showInsights} onClose={() => setShowInsights(false)} title="Análisis de IA" size="md">
-        <div className="flex flex-col gap-4 p-2">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-worldcup-400 to-worldcup-600 flex items-center justify-center text-white shadow-lg shadow-worldcup-500/30">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 dark:text-white">Gemini 2.5 Flash</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Generando insights del partido...</p>
-            </div>
-          </div>
-          <div className="bg-worldcup-50/50 dark:bg-worldcup-900/10 border border-worldcup-100 dark:border-worldcup-900/30 rounded-xl p-4 min-h-[100px] flex items-center justify-center">
-            {loadingInsights ? (
-              <div className="flex flex-col items-center gap-2 text-worldcup-500">
-                <Loader2 className="w-6 h-6 animate-spin" />
-                <span className="text-sm font-medium animate-pulse">Analizando estadísticas...</span>
-              </div>
-            ) : (
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
-                {insights}
-              </p>
-            )}
-          </div>
-          <div className="flex justify-end mt-2">
-            <Button onClick={() => setShowInsights(false)}>Cerrar</Button>
-          </div>
-        </div>
-      </Modal>
-    </>
   )
 }
