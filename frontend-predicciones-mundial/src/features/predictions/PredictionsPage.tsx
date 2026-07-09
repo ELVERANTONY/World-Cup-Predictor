@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
 export function PredictionsPage() {
   const { addToast } = useToast()
   const { user } = useAuth()
-  const { data: predictions = [], isLoading: loading, error: predictionsError, refetch: fetchPredictions } = useMyPredictions()
+  const { data: predictions = [], isLoading: loading, error: predictionsError } = useMyPredictions()
   const { data: teams = [] } = useTeams()
   const createPredictionMutation = useCreatePrediction()
   const updatePredictionMutation = useUpdatePrediction()
@@ -115,7 +115,7 @@ export function PredictionsPage() {
               </div>
             ) : null}
             
-            <Button onClick={() => { setSelectedWinnerId(user?.predictedWinnerId || ''); setShowWinnerModal(true) }} variant={user?.predictedWinner ? 'outline' : 'default'} className={user?.predictedWinner ? '' : 'animate-pulse'}>
+            <Button onClick={() => { setSelectedWinnerId(user?.predictedWinnerId || ''); setShowWinnerModal(true) }} variant={user?.predictedWinner ? 'outline' : 'primary'} className={user?.predictedWinner ? '' : 'animate-pulse'}>
               {user?.predictedWinner ? 'Cambiar Elección' : 'Elegir Ganador'}
             </Button>
           </div>

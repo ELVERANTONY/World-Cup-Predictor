@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { motion } from 'motion/react'
 import { useMatches } from '@/hooks/useQueries'
 import type { Match } from '@/types'

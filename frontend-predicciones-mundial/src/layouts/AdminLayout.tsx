@@ -11,9 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Shield,
   LogOut,
-  Trophy,
 } from 'lucide-react'
 import worldCupImage from '@/assets/World Cup.png'
 import { cn } from '@/lib/utils'

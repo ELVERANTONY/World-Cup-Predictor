@@ -35,7 +35,7 @@ export function PredictionCard({ prediction, onEdit }: PredictionCardProps) {
   const badge = match ? statusBadge[match.status] || { variant: 'default' as const, label: match.status } : { variant: 'default' as const, label: 'Unknown' }
 
   return (
-    <div onClick={() => onClick?.(prediction)} className={`cursor-pointer h-full ${!onClick ? 'pointer-events-none' : ''}`}>
+    <div onClick={() => onEdit?.(prediction)} className={`cursor-pointer h-full ${!onEdit ? 'pointer-events-none' : ''}`}>
       <GlowCard customSize={true} className="p-5 flex flex-col h-full bg-white dark:bg-zinc-900 border border-gray-200/60 dark:border-zinc-700/60 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
         <motion.div
           layout

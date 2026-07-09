@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import {
   Menu, Bell, Moon, Sun, Trophy, LogOut, User, Settings, ChevronDown, BarChart3,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/useAuth'
 import { getUnreadCount } from '@/services/notification.service'
 import { NotificationsPanel } from '@/features/notifications/NotificationsPanel'
@@ -13,11 +12,8 @@ interface NavbarProps {
   onMenuClick: () => void
 }
 
-const navLinks: any[] = []
-
 export function Navbar({ onMenuClick }: NavbarProps) {
   const { user, logout } = useAuth()
-  const location = useLocation()
   const navigate = useNavigate()
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') return document.documentElement.classList.contains('dark')

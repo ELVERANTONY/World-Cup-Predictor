@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'motion/react'
 import {
   Users,
@@ -138,7 +137,7 @@ export function AdminDashboard() {
     try {
       const result = await syncMutation.mutateAsync()
       addToast('success', `Sync completed! ${result.matches} matches, ${result.scoresCalculated} scores calculated`)
-    } catch (err) {
+    } catch (err: unknown) {
       addToast('error', err instanceof Error ? err.message : 'Failed to sync World Cup data')
     }
   }
@@ -161,7 +160,7 @@ export function AdminDashboard() {
     )
   }
 
-  const defaultStats: DashboardStats = {
+  const defaultStats = {
     totalUsers: 0,
     totalMatches: 0,
     totalPredictions: 0,
