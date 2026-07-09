@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import {
-  LayoutDashboard, Calendar, Trophy, Users, Target, ChevronLeft, ChevronRight, X, LogOut, User,
+  LayoutDashboard, Calendar, Trophy, Users, Target, ChevronLeft, ChevronRight, X, User,
 } from 'lucide-react'
 import worldCupImage from '@/assets/World Cup.png'
 import { cn } from '@/lib/utils'
@@ -35,7 +35,7 @@ const adminItems = [
 
 export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
   const location = useLocation()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   const sidebarContent = (
@@ -132,9 +132,6 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
               <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user?.name || 'User'}</p>
               <p className="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={logout} className="p-2 rounded-xl text-gray-400 hover:text-red-500 hover:bg-white dark:hover:bg-zinc-900 shadow-sm transition-all active:scale-95 border border-transparent hover:border-red-100 dark:hover:border-red-900/30">
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
         )}
       </div>
