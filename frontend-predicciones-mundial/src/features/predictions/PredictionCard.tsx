@@ -1,6 +1,7 @@
 import { motion } from 'motion/react'
 import { Clock } from 'lucide-react'
 import type { Prediction } from '@/types'
+import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { GlowCard } from '@/components/ui/spotlight-card'
 
