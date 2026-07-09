@@ -35,3 +35,4 @@ process.on('SIGINT', async () => {
   await prisma.$disconnect();
   process.exit(0);
 });
+console.log('GEMINI_KEY_SET:', !!process.env.GEMINI_API_KEY);
