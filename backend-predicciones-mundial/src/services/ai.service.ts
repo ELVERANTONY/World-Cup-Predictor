@@ -1,7 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { prisma } from '../config/prisma.js';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'MISSING_KEY');
+function getGeminiKey(): string {
+  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+  return '';
+}
+
+const GEMINI_KEY = getGeminiKey();
+const genAI = GEMINI_KEY ? new GoogleGenerativeAI(GEMINI_KEY) : null;
 
 export class AIService {
   async getMatchInsights(matchId: string): Promise<string> {
@@ -11,7 +17,7 @@ export class AIService {
     });
     if (!match) return "Partido no encontrado.";
     if (match.aiInsight) return match.aiInsight;
-    if (!process.env.GEMINI_API_KEY) return "Insights de IA no disponibles (API Key no configurada).";
+    if (!GEMINI_KEY || !genAI) return "Insights de IA no disponibles (API Key no configurada).";
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `Eres un experto analista de fútbol mundial. Brinda una breve estadística o dato curioso sobre un posible enfrentamiento entre ${match.homeTeam?.name || 'TBD'} y ${match.awayTeam?.name || 'TBD'} en la fase de ${match.stage} del Mundial. Máximo 2-3 oraciones. No digas quién va a ganar directamente.`;
@@ -32,7 +38,7 @@ export class AIService {
     });
     let count = 0;
     for (const match of matches) {
-      if (!process.env.GEMINI_API_KEY) break;
+      if (!GEMINI_KEY || !genAI) break;
       try {
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const prompt = `Eres un experto analista de fútbol mundial. Brinda una breve estadística o dato curioso sobre un posible enfrentamiento entre ${match.homeTeam?.name || 'TBD'} y ${match.awayTeam?.name || 'TBD'} en la fase de ${match.stage} del Mundial. Máximo 2-3 oraciones. No digas quién va a ganar directamente.`;
@@ -53,7 +59,7 @@ export class AIService {
       include: { homeTeam: true, awayTeam: true },
     });
     if (!match) throw new Error("Partido no encontrado.");
-    if (!process.env.GEMINI_API_KEY) return "El chat de IA no está disponible en este momento.";
+    if (!GEMINI_KEY || !genAI) return "El chat de IA no está disponible en este momento.";
 
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
