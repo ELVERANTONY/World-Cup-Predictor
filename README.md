@@ -12,8 +12,8 @@ Predictor de resultados del Mundial 2026 con autenticación, rankings, salas de 
 ## Estructura
 
 ```
-backend-apuestas-mundial/   → API REST (Express + Prisma + PostgreSQL)
-frontend-apuestas-mundial/  → SPA (React + Vite + Tailwind)
+backend-predicciones-mundial/   → API REST (Express + Prisma + PostgreSQL)
+frontend-predicciones-mundial/  → SPA (React + Vite + Tailwind)
 ```
 
 ## Credenciales de prueba (local)
