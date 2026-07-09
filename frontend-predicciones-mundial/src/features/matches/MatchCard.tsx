@@ -115,5 +115,6 @@ export function MatchCard({ match }: MatchCardProps) {
       </motion.div>
       </GlowCard>
     </div>
+    </>
   )
 }

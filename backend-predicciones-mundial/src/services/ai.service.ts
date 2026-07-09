@@ -26,8 +26,9 @@ export class AIService {
       const insight = response.text().trim();
       await prisma.match.update({ where: { id: matchId }, data: { aiInsight: insight } });
       return insight;
-    } catch {
-      return "Estadísticas históricas entre ambos equipos muestran encuentros muy parejos.";
+    } catch (err) {
+      console.error("[AI] Error generando insight:", err instanceof Error ? err.message : err);
+      return `Análisis no disponible temporalmente.`;
     }
   }
 
