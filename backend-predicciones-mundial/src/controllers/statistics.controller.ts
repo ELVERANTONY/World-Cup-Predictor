@@ -4,7 +4,7 @@ import { statisticsService } from '../services/statistics.service.js';
 export class StatisticsController {
   async getUserStats(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.params.userId as string || req.user!.userId;
+      const userId = req.user!.userId;
       const stats = await statisticsService.getUserStats(userId);
       res.json({ status: 'success', data: stats });
     } catch (error) {

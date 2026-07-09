@@ -34,8 +34,18 @@ export function PredictionCard({ prediction, onEdit }: PredictionCardProps) {
 
   const badge = match ? statusBadge[match.status] || { variant: 'default' as const, label: match.status } : { variant: 'default' as const, label: 'Unknown' }
 
+  const stageMap: Record<string, string> = {
+    'Group stage': 'Fase de Grupos',
+    'Round of 16': 'Octavos de Final',
+    'Quarter-final': 'Cuartos de Final',
+    'Semi-final': 'Semifinal',
+    'Final': 'Gran Final',
+    'Third place': 'Tercer Puesto'
+  }
+  const translatedStage = match?.stage ? (stageMap[match.stage] || match.stage) : '';
+
   return (
-    <div onClick={() => onEdit?.(prediction)} className={`cursor-pointer h-full ${!onEdit ? 'pointer-events-none' : ''}`}>
+    <div className={`h-full pointer-events-none`}>
       <GlowCard customSize={true} className="p-5 flex flex-col h-full bg-white dark:bg-zinc-900 border border-gray-200/60 dark:border-zinc-700/60 shadow-sm hover:shadow-xl transition-all duration-300 rounded-2xl">
         <motion.div
           layout
@@ -48,11 +58,7 @@ export function PredictionCard({ prediction, onEdit }: PredictionCardProps) {
               {match?.status === 'LIVE' && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse mr-1" />}
               {badge.label}
             </Badge>
-            {isUpcoming && onEdit && (
-              <Button variant="ghost" size="sm" onClick={() => onEdit(prediction)}>
-                <Edit2 className="w-4 h-4 mr-1" /> Editar
-              </Button>
-            )}
+
             {isFinished && (
               <span className={cn(
                 'text-xs font-semibold px-2 py-0.5 rounded-full',

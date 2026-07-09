@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
+import { z } from 'zod';
 import { prisma } from '../config/prisma.js';
 import { AppError } from '../middlewares/errorHandler.js';
+
+const updatePredictedWinnerSchema = z.object({
+  teamId: z.string().min(1),
+});
 
 export class UserController {
   async getAll(_req: Request, res: Response, next: NextFunction) {
@@ -29,8 +34,12 @@ export class UserController {
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
+      const userId = req.params.id as string;
+      if (userId !== req.user!.userId && req.user!.role !== 'ADMIN') {
+        throw new AppError('Not authorized to view this profile.', 403);
+      }
       const user = await prisma.user.findUnique({
-        where: { id: req.params.id as string },
+        where: { id: userId },
         select: {
           id: true,
           name: true,
@@ -69,7 +78,7 @@ export class UserController {
   async updatePredictedWinner(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.userId;
-      const { teamId } = req.body;
+      const { teamId } = updatePredictedWinnerSchema.parse(req.body);
       
       const team = await prisma.team.findUnique({ where: { id: teamId } });
       if (!team) throw new AppError('Team not found.', 404);

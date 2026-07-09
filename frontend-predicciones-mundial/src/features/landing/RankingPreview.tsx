@@ -1,27 +1,6 @@
 import { motion } from 'motion/react'
 import type { Variants } from 'motion/react'
-
-interface Team {
-  rank: number
-  team: string
-  flag: string
-  wins: number
-  losses: number
-  points: number
-}
-
-const RANKINGS: Team[] = [
-  { rank: 1, team: 'Argentina', flag: 'ar', wins: 5, losses: 1, points: 92 },
-  { rank: 2, team: 'France', flag: 'fr', wins: 4, losses: 2, points: 88 },
-  { rank: 3, team: 'Brazil', flag: 'br', wins: 4, losses: 1, points: 85 },
-  { rank: 4, team: 'England', flag: 'gb', wins: 3, losses: 2, points: 82 },
-  { rank: 5, team: 'Germany', flag: 'de', wins: 3, losses: 2, points: 79 },
-  { rank: 6, team: 'Netherlands', flag: 'nl', wins: 3, losses: 3, points: 76 },
-  { rank: 7, team: 'Spain', flag: 'es', wins: 2, losses: 2, points: 73 },
-  { rank: 8, team: 'Portugal', flag: 'pt', wins: 2, losses: 3, points: 70 },
-  { rank: 9, team: 'Italy', flag: 'it', wins: 2, losses: 3, points: 67 },
-  { rank: 10, team: 'Uruguay', flag: 'uy', wins: 1, losses: 4, points: 64 },
-]
+import { useGlobalRanking } from '@/hooks/useQueries'
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -41,7 +20,21 @@ const rowVariants: Variants = {
 }
 
 export function RankingPreview() {
-  const maxPoints = Math.max(...RANKINGS.map(t => t.points))
+  const { data, isLoading } = useGlobalRanking()
+  const users = data?.users?.slice(0, 10) || []
+  const maxPoints = Math.max(...users.map(u => u.totalPoints || 0), 1)
+
+  if (isLoading) {
+    return (
+      <section className="bg-worldcup-900 py-20">
+        <div className="mx-auto max-w-7xl px-4 text-center">
+          <p className="text-white/50 animate-pulse">Cargando clasificación...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (users.length === 0) return null
 
   return (
     <section className="bg-worldcup-900 py-20">
@@ -55,15 +48,12 @@ export function RankingPreview() {
         >
           <div>
             <h2 className="text-3xl font-bold text-white md:text-4xl">
-              World Ranking
+              Top Predictores
             </h2>
             <p className="mt-2 text-white/50">
-              Top 10 teams by performance score
+              Los mejores pronosticadores del Mundial 2026
             </p>
           </div>
-          <button className="hidden rounded-full border border-emerald-500/30 px-6 py-2 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/10 md:inline-flex">
-            View Full Ranking
-          </button>
         </motion.div>
 
         <motion.div
@@ -73,36 +63,33 @@ export function RankingPreview() {
           viewport={{ once: true, amount: 0.1 }}
           className="space-y-3"
         >
-          {RANKINGS.map(team => (
+          {users.map((u, i) => (
             <motion.div
-              key={team.rank}
+              key={u.id}
               variants={rowVariants}
               className="flex items-center gap-4 rounded-xl border border-white/5 bg-white/5 p-4 backdrop-blur-sm transition-colors hover:bg-white/10"
             >
               <span
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
-                  team.rank <= 3
+                  i < 3
                     ? 'bg-yellow-500/20 text-yellow-400'
                     : 'bg-white/10 text-white/60'
                 }`}
               >
-                {team.rank}
+                {u.rank || i + 1}
               </span>
 
-              <img
-                src={`https://flagcdn.com/w20/${team.flag}.png`}
-                alt={team.team}
-                className="h-8 w-8 rounded-full object-cover"
-              />
-
-              <span className="flex-1 font-semibold text-white">
-                {team.team}
-              </span>
-
-              <div className="hidden items-center gap-4 text-sm text-white/60 md:flex">
-                <span>W: {team.wins}</span>
-                <span>L: {team.losses}</span>
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                {u.avatarUrl ? (
+                  <img src={u.avatarUrl} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  u.name?.charAt(0)?.toUpperCase() || '?'
+                )}
               </div>
+
+              <span className="flex-1 font-semibold text-white truncate">
+                {u.name || 'Anónimo'}
+              </span>
 
               <div className="flex items-center gap-3">
                 <div className="h-2 w-24 overflow-hidden rounded-full bg-white/10 md:w-32">
@@ -110,33 +97,22 @@ export function RankingPreview() {
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
                     initial={{ width: 0 }}
                     whileInView={{
-                      width: `${(team.points / maxPoints) * 100}%`,
+                      width: `${(u.totalPoints / maxPoints) * 100}%`,
                     }}
                     viewport={{ once: true }}
                     transition={{
                       duration: 1,
-                      delay: team.rank * 0.1,
+                      delay: i * 0.1,
                       ease: 'easeOut',
                     }}
                   />
                 </div>
                 <span className="w-8 text-right text-sm font-bold text-white">
-                  {team.points}
+                  {u.totalPoints}
                 </span>
               </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-8 text-center md:hidden"
-        >
-          <button className="rounded-full border border-emerald-500/30 px-6 py-2 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/10">
-            View Full Ranking
-          </button>
         </motion.div>
       </div>
     </section>

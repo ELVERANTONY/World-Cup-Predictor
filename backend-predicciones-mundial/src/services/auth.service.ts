@@ -213,7 +213,7 @@ export class AuthService {
       data: { resetToken, resetTokenExp },
     });
 
-    return { message: 'If the email exists, a password reset link has been sent.', resetToken };
+    return { message: 'If the email exists, a password reset link has been sent.' };
   }
 
   async resetPassword(token: string, newPassword: string) {

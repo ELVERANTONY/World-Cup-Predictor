@@ -123,11 +123,13 @@ export function PredictionsPage() {
       </motion.div>
 
       <div className="flex gap-2">
-        {(['all', 'upcoming', 'finished'] as const).map(f => (
-          <button key={f} onClick={() => setFilter(f)} className={cn('px-4 py-2 rounded-xl text-sm font-medium transition-all', filter === f ? 'bg-worldcup-500 text-white shadow-md' : 'bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700')}>
-            {f.charAt(0).toUpperCase() + f.slice(1)}
+        {(['Todos', 'Próximos', 'Terminados'] as const).map((f, idx) => {
+          const filterValue = ['all', 'upcoming', 'finished'][idx] as 'all' | 'upcoming' | 'finished';
+          return (
+          <button key={f} onClick={() => setFilter(filterValue)} className={cn('px-4 py-2 rounded-xl text-sm font-medium transition-all', filter === filterValue ? 'bg-worldcup-500 text-white shadow-md' : 'bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700')}>
+            {f}
           </button>
-        ))}
+        )})}
       </div>
 
       {loading ? (
@@ -135,9 +137,9 @@ export function PredictionsPage() {
       ) : filtered.length === 0 ? (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-20 text-center">
           <Target className="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">No predictions yet</h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">Start predicting match results!</p>
-          <Button onClick={() => setShowCreateForm(true)}>Make your first prediction</Button>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Aún no hay predicciones</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">¡Empieza a pronosticar resultados!</p>
+          <Button onClick={() => setShowCreateForm(true)}>Haz tu primera predicción</Button>
         </motion.div>
       ) : (
         <motion.div className="grid gap-4" variants={staggerContainer} initial="hidden" animate="visible">

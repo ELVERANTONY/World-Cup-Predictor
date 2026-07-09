@@ -35,8 +35,8 @@ export function PredictionForm({ match: initialMatch, prediction, onSubmit, onCa
     if (!matchId) errs.matchId = 'Selecciona un partido'
     const hs = parseInt(homeScore)
     const as = parseInt(awayScore)
-    if (isNaN(hs) || hs < 0 || hs > 10) errs.homeScore = 'Debe ser entre 0 y 10'
-    if (isNaN(as) || as < 0 || as > 10) errs.awayScore = 'Debe ser entre 0 y 10'
+    if (isNaN(hs) || hs < 0 || hs > 9) errs.homeScore = 'Debe ser entre 0 y 9'
+    if (isNaN(as) || as < 0 || as > 9) errs.awayScore = 'Debe ser entre 0 y 9'
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -94,13 +94,39 @@ export function PredictionForm({ match: initialMatch, prediction, onSubmit, onCa
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-2">
             {selectedMatch?.homeTeam?.flagUrl ? <img src={selectedMatch.homeTeam.flagUrl.replace('w80/w80/', 'w80/')} alt="home" className="w-5 h-3 object-cover rounded-sm" /> : ''} Goles Local
           </label>
-          <Input type="number" min={0} max={10} value={homeScore} onChange={e => setHomeScore(e.target.value)} error={errors.homeScore} placeholder="0-10" />
+          <Input 
+            type="number" 
+            min={0} 
+            max={9} 
+            value={homeScore} 
+            onChange={e => {
+              const val = e.target.value;
+              if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 9)) {
+                setHomeScore(val);
+              }
+            }} 
+            error={errors.homeScore} 
+            placeholder="0-9" 
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-2">
             {selectedMatch?.awayTeam?.flagUrl ? <img src={selectedMatch.awayTeam.flagUrl.replace('w80/w80/', 'w80/')} alt="away" className="w-5 h-3 object-cover rounded-sm" /> : ''} Goles Visita
           </label>
-          <Input type="number" min={0} max={10} value={awayScore} onChange={e => setAwayScore(e.target.value)} error={errors.awayScore} placeholder="0-10" />
+          <Input 
+            type="number" 
+            min={0} 
+            max={9} 
+            value={awayScore} 
+            onChange={e => {
+              const val = e.target.value;
+              if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= 9)) {
+                setAwayScore(val);
+              }
+            }} 
+            error={errors.awayScore} 
+            placeholder="0-9" 
+          />
         </div>
       </div>
 
