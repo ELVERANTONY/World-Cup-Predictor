@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { Hero } from '@/features/landing/Hero'
 import { TournamentBracket } from '@/features/landing/TournamentBracket'
 import { NextMatches } from '@/features/landing/NextMatches'
+import { RankingPreview } from '@/features/landing/RankingPreview'
 import { Footer } from '@/features/landing/Footer'
 
 const sectionVariants = {
@@ -22,6 +23,7 @@ export function LandingPage() {
       <Hero />
       <TournamentBracket />
       <NextMatches />
+      <RankingPreview />
       <Footer />
     </motion.div>
   )
