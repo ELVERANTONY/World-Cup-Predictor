@@ -5,6 +5,7 @@ import type { Notification } from '@/types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { staggerContainer, staggerItem } from '@/utils/animation'
+import { useNavigate } from 'react-router-dom'
 
 interface NotificationsPanelProps {
   open: boolean
@@ -30,6 +31,7 @@ const typeColors: Record<string, string> = {
 }
 
 export function NotificationsPanel({ open, onClose, unreadCount, onCountChange }: NotificationsPanelProps) {
+  const navigate = useNavigate()
   const { data: notifications = [], isLoading: loading } = useNotifications({ enabled: open })
   const markAsReadMutation = useMarkAsRead()
   const markAllAsReadMutation = useMarkAllAsRead()
@@ -39,12 +41,26 @@ export function NotificationsPanel({ open, onClose, unreadCount, onCountChange }
     onCountChange(0)
   }
 
+  function getNotificationLink(n: Notification): string {
+    if (n.metadata?.matchId) return `/matches/${n.metadata.matchId}`
+    if (n.metadata?.roomId) return `/rooms/${n.metadata.roomId}`
+    switch (n.type) {
+      case 'prediction': return '/predictions'
+      case 'match': return n.metadata?.matchId ? `/matches/${n.metadata.matchId}` : '/matches'
+      case 'rank': return '/rankings'
+      case 'room': return n.metadata?.roomId ? `/rooms/${n.metadata.roomId}` : '/rooms'
+      default: return '/dashboard'
+    }
+  }
+
   async function handleClick(n: Notification) {
     if (!n.read) {
       await markAsReadMutation.mutateAsync(n.id)
       onCountChange(Math.max(0, unreadCount - 1))
     }
     onClose()
+    const link = getNotificationLink(n)
+    if (link) navigate(link)
   }
 
   return (

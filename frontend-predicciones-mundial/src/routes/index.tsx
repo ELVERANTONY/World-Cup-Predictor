@@ -19,7 +19,10 @@ import { useAuth } from '@/hooks/useAuth'
 import type { ReactNode } from 'react'
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin w-8 h-8 border-4 border-worldcup-500 border-t-transparent rounded-full" /></div>
+  }
   if (!isAuthenticated) {
     return <Navigate to="/" replace />
   }

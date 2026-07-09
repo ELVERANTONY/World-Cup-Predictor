@@ -129,7 +129,8 @@ export interface Achievement {
 }
 
 export interface LoginResponse {
-  token: string;
+  token?: string;
+  accessToken?: string;
   refreshToken: string;
   user: User;
 }

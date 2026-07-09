@@ -60,7 +60,7 @@ export function RankingsPage() {
 
   const { data: entries = [], isLoading: loading, error } = useTabData(tab)
 
-  const filteredEntries = entries.filter(e => e.user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || e.user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredEntries = entries.filter(e => e.user.name?.toLowerCase().includes(searchTerm.toLowerCase()) || e.user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const top3 = entries.slice(0, 3)
   const rest = filteredEntries.filter(e => e.rank > 3)

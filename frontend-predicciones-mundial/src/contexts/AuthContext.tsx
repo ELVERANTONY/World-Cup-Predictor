@@ -29,32 +29,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authService
       .getProfile()
       .then((profile) => setUser(profile))
-      .catch(() => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+      .catch((err) => {
+        if (err?.response?.status === 401) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        }
       })
       .finally(() => setIsLoading(false));
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const data = await authService.login(email, password);
-    localStorage.setItem('accessToken', data.token);
+  function storeAuth(data: { token?: string; accessToken?: string; refreshToken: string; user: User }) {
+    const accessToken = data.token || data.accessToken || '';
+    localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     setUser(data.user);
+  }
+
+  const login = useCallback(async (email: string, password: string) => {
+    const data = await authService.login(email, password);
+    storeAuth(data as any);
   }, []);
 
   const register = useCallback(async (name: string, email: string, password: string) => {
     const data = await authService.register(name, email, password);
-    localStorage.setItem('accessToken', data.token);
-    localStorage.setItem('refreshToken', data.refreshToken);
-    setUser(data.user);
+    storeAuth(data as any);
   }, []);
 
   const googleLogin = useCallback(async (token: string) => {
     const data = await authService.googleLogin(token);
-    localStorage.setItem('accessToken', data.token);
-    localStorage.setItem('refreshToken', data.refreshToken);
-    setUser(data.user);
+    storeAuth(data as any);
   }, []);
 
   const forgotPassword = useCallback(async (email: string) => {
